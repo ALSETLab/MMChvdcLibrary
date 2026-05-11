@@ -1,0 +1,107 @@
+within MMC_HVDC_AMCONF2026.Examples;
+model DCvoltageModeTest
+  "Tests the DC Voltage control of the MMC HVDC by using the 'DCvoltageModeMMCstation'."
+  extends Modelica.Icons.Example;
+  OpenIPSL.Electrical.Buses.InfiniteBus infiniteBus(
+    P_0=0,
+    Q_0=0,
+    S_b=1000000000,
+    v_0(displayUnit="1") = 1,
+    V_b=320000,
+    fn=50,
+    angle_0(displayUnit="deg") = 0.5235987755983,
+    displayPF=true)                                annotation (Placement(
+        transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=180,
+        origin={90,4})));
+  inner OpenIPSL.Electrical.SystemBase SysData(S_b=1000000000,
+                                                         fn=50)
+    annotation (Placement(transformation(extent={{32,78},{98,98}})));
+  Modelica.Blocks.Sources.Step Vdc_ref(
+    height=0.5,
+    offset=1,
+    startTime(displayUnit="s") = 1) "Reference DC voltage"
+    annotation (Placement(transformation(extent={{-40,-40},{-20,-20}})));
+  Modelica.Electrical.Analog.Basic.Ground ground
+    annotation (Placement(transformation(extent={{-70,-40},{-50,-20}})));
+  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Sensor.ACpowerSensor pQ_Sensor(S_b=
+        SysData.S_b)
+    annotation (Placement(transformation(extent={{46,0},{60,8}})));
+  MMC_HVDC_BlackStart.MMC_HVDCstation.DCvoltageModeMMCstation mMC_voltage_Mode(
+    Rr=0.001,
+    Xr=0.18,
+    L_arm=0.078,
+    R_arm=0.00758,
+    C_dc=195E-6,
+    C_sub=10e-3,
+    N_sub=200,
+    S_b=1000,
+    MVAb=1000,
+    fb=50,
+    Vb=320,
+    Vdcb=640,
+    V_0=1,
+    angle_0=0.5235987755983,
+    P_0=0.498303,
+    Q_0=0.2,
+    Vdc_0=1,
+    Wmmc_0=1) annotation (Placement(transformation(extent={{0,-14},{40,22}})));
+  Modelica.Electrical.Analog.Basic.Capacitor capacitor(v(start=640E3, fixed=
+          true), C=195*1E-6)   annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=270,
+        origin={-52,4})));
+  Modelica.Blocks.Sources.Step     Qref(
+    height=0.1,
+    offset=0.2,
+    startTime=1.5) "Reference reactive power"
+    annotation (Placement(transformation(extent={{-40,-80},{-20,-60}})));
+  OpenIPSL.Electrical.Buses.Bus bus1(
+    S_b=1000000000,
+    V_b=320000,
+    displayPF=true)
+    annotation (Placement(transformation(extent={{58,-6},{78,14}})));
+  Modelica.Electrical.Analog.Sources.SignalCurrent signalCurrent annotation (
+      Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={-76,4})));
+  Modelica.Blocks.Sources.Step CurrentStep(
+    height=1*0.1*1.5625e03,
+    offset=1*(0.5)*1.5625e+03,
+    startTime=1)
+    annotation (Placement(transformation(extent={{-116,-6},{-96,14}})));
+equation
+  connect(capacitor.p, mMC_voltage_Mode.pin_p) annotation (Line(points={{-52,14},
+          {-52,20},{-6,20},{-6,13},{-1,13}},  color={0,0,255}));
+  connect(capacitor.n, mMC_voltage_Mode.pin_n) annotation (Line(points={{-52,-6},
+          {-52,-10},{-6,-10},{-6,-3},{-1,-3}},         color={0,0,255}));
+  connect(ground.p, mMC_voltage_Mode.pin_n) annotation (Line(points={{-60,-20},
+          {-60,-10},{-6,-10},{-6,-3},{-1,-3}},    color={0,0,255}));
+  connect(pQ_Sensor.n, bus1.p)
+    annotation (Line(points={{60,4},{68,4}}, color={0,0,255}));
+  connect(bus1.p, infiniteBus.p)
+    annotation (Line(points={{68,4},{80,4}}, color={0,0,255}));
+  connect(signalCurrent.n, mMC_voltage_Mode.pin_p) annotation (Line(points={{-76,14},
+          {-76,20},{-6,20},{-6,13},{-1,13}},         color={0,0,255}));
+  connect(signalCurrent.p, mMC_voltage_Mode.pin_n) annotation (Line(points={{-76,-6},
+          {-76,-10},{-6,-10},{-6,-3},{-1,-3}},             color={0,0,255}));
+  connect(CurrentStep.y, signalCurrent.i) annotation (Line(points={{-95,4},{-88,
+          4}},                 color={0,0,127}));
+  connect(Qref.y, mMC_voltage_Mode.Qref)
+    annotation (Line(points={{-19,-70},{30,-70},{30,-16}}, color={0,0,127}));
+  connect(Vdc_ref.y, mMC_voltage_Mode.Vref)
+    annotation (Line(points={{-19,-30},{10,-30},{10,-16}}, color={0,0,127}));
+  connect(pQ_Sensor.p, mMC_voltage_Mode.pwPin) annotation (Line(points={{46,4},
+          {44,4},{44,3.8},{41,3.8}}, color={0,0,255}));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, grid={2,2})),
+                                                                 Diagram(
+        coordinateSystem(preserveAspectRatio=false, extent={{-120,-100},{100,100}})),
+    experiment(
+      StopTime=10,
+      Interval=0.0001,
+      Tolerance=0.001,
+      __Dymola_fixedstepsize=1e-05,
+      __Dymola_Algorithm="Dassl"));
+end DCvoltageModeTest;
