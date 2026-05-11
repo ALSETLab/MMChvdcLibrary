@@ -109,7 +109,7 @@ model MasterHVDCstationWithoutBlocking
     initType=Modelica.Blocks.Types.Init.InitialOutput,
     y_start=ACq0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,-68})));
-  MMC_HVDC_BlackStart.ComponentLibrary.Converter.AvgMMCmodel avgMMCmodel_withBlock2_1(
+  ComponentLibrary.Converter.AvgMMCmodel                     avgMMCmodel_withBlock2_1(
     Rr=Rr,
     Xr=Xr,
     L_arm=L_arm,
@@ -166,8 +166,8 @@ public
   Modelica.Electrical.Analog.Interfaces.NegativePin pin_n annotation (Placement(
         transformation(extent={{-210,10},{-190,30}}),   iconTransformation(
           extent={{-210,10},{-190,30}})));
-  OpenIPSL.Interfaces.PwPin pwPin annotation (Placement(transformation(extent={{190,-10},
-            {210,10}}),         iconTransformation(extent={{190,-10},{210,10}})));
+  OpenIPSL.Interfaces.PwPin pwPin annotation (Placement(transformation(extent={{190,92},
+            {210,112}}),        iconTransformation(extent={{190,92},{210,112}})));
   MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.DCvoltageControl.DCvotlageControl
     DCvoltageControl(
     k=5,
@@ -454,7 +454,7 @@ equation
           {-200,198},{-90.2941,198},{-90.2941,199.5}},
         color={0,0,255}));
   connect(avgMMCmodel_withBlock2_1.p, pwPin) annotation (Line(points={{70.2941,
-          211},{200,211},{200,0}},                               color={0,0,255}));
+          211},{200,211},{200,102}},                             color={0,0,255}));
   connect(EnergyControl.Wtot, energy_Calculator.Wtot) annotation (Line(points={{
           -123.333,66},{-138,66},{-138,120},{-148.4,120}},  color={0,0,127}));
   connect(energy_Calculator.Vceq,sI_to_pu. Vceq_pu) annotation (Line(points={{-171.7,
@@ -677,8 +677,8 @@ equation
   connect(switch4.u2, flag2.y) annotation (Line(points={{59,35},{34,35},{34,-33},
           {-95.5,-33}}, color={255,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-200,
-            -240},{200,240}},
-        grid={2,2}),     graphics={
+            -240},{200,240}}),
+                         graphics={
         Rectangle(
           extent={{-200,240},{200,-240}},
           lineColor={0,0,0},

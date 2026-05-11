@@ -69,7 +69,7 @@ model DCvoltageModeMMCstation "MMC HVDC station with only DC voltage control."
     x_start=0,
     y_start=ACq0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,-108})));
-  MMC_HVDC_BlackStart.ComponentLibrary.Converter.AvgMMCmodel avgMMCmodel(
+  ComponentLibrary.Converter.AvgMMCmodel                     avgMMCmodel(
     Rr=Rr,
     Xr=Xr,
     L_arm=L_arm,

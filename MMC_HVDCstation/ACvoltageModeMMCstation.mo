@@ -29,7 +29,7 @@ model ACvoltageModeMMCstation "MMC HVDC station with only AC voltage control."
     x_start=0,
     y_start=DC_0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,8})));
-  MMC_HVDC_BlackStart.ComponentLibrary.Converter.AvgMMCmodel avgMMCmodel(
+  ComponentLibrary.Converter.AvgMMCmodel                     avgMMCmodel(
     Rr=Rr,
     Xr=Xr,
     L_arm=L_arm,
@@ -338,8 +338,9 @@ equation
   connect(gain.y, Vac_ref_SI) annotation (Line(points={{30.6,-168},{34,-168},{
           34,-169},{49,-169}},
                      color={0,0,127}));
-  connect(EnergyControl.Pac, pQ_calculator.Pac) annotation (Line(points={{-109.333,
-          7.6},{-120,7.6},{-120,-12.8},{-124.8,-12.8}}, color={0,0,127}));
+  connect(EnergyControl.Pac, pQ_calculator.Pac) annotation (Line(points={{
+          -109.333,7.6},{-120,7.6},{-120,-12.8},{-124.8,-12.8}},
+                                                        color={0,0,127}));
   connect(polar2Complex.xmag, Vac_ref)
     annotation (Line(points={{-18,-160},{0,-160},{0,-200}}, color={0,0,127}));
   connect(rI_to_dq2.xr, polar2Complex.xr) annotation (Line(points={{-58,-166},{
@@ -452,7 +453,8 @@ equation
   connect(aCqaxisModulation.Vc_eq, sI_to_pu.Vceq_pu) annotation (Line(points={{
           96,-112},{-32,-112},{-32,74},{-31.7,74},{-31.7,78.2}}, color={0,0,127}));
   connect(pin_p, avgMMCmodel.pin_p) annotation (Line(points={{-210,90},{-196,90},
-          {-196,162.8},{-80.2647,162.8}}, color={0,0,255}));
+          {-196,162.34},{-80.2647,162.34}},
+                                          color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-200,-180},
             {200,180}}), graphics={
         Rectangle(

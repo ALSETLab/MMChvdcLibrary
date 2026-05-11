@@ -66,7 +66,7 @@ model ActivePowerModeMMCstation
     initType=Modelica.Blocks.Types.Init.InitialOutput,
     y_start=ACq0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,-108})));
-  MMC_HVDC_BlackStart.ComponentLibrary.Converter.AvgMMCmodel avgMMCmodel(
+  ComponentLibrary.Converter.AvgMMCmodel                     avgMMCmodel(
     Rr=Rr,
     Xr=Xr,
     L_arm=L_arm,
@@ -379,8 +379,8 @@ equation
   connect(dCvoltageSquareReference.Vdc, sI_to_pu.Vdc_pu) annotation (Line(
         points={{-103.333,32},{-110,32},{-110,60},{-69.7333,60},{-69.7333,76}},
         color={0,0,127}));
-  connect(dCsideModulation.Vdc, sI_to_pu.Vdc_pu) annotation (Line(points={{96,4},
-          {-40,4},{-40,60},{-69.7333,60},{-69.7333,76}}, color={0,0,127}));
+  connect(dCsideModulation.Vdc, sI_to_pu.Vdc_pu) annotation (Line(points={{96,4},{
+          -40,4},{-40,60},{-69.7333,60},{-69.7333,76}},  color={0,0,127}));
   connect(sI_to_pu.Vceq_pu, dCsideModulation.Vc_eq)
     annotation (Line(points={{-43.1,76},{-43.1,-4},{96,-4}}, color={0,0,127}));
   connect(energy_Calculator.Vceq, sI_to_pu.Vceq_pu) annotation (Line(points={{

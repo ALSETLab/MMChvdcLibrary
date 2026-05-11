@@ -1,0 +1,31 @@
+Log-file of program ./dymosim
+(generated: Mon May 11 15:21:41 2026)
+
+dymosim started
+... "MMC_HVDC_AMCONF2026.Examples.VacModeTestInMasterHVDCstation" simulating
+... "dsin.txt" loading (dymosim input file)
+... "VacModeTestInMasterHVDCstation.mat" creating (simulation result file)
+
+Integration started at T = 0 using integration method DASSL
+(DAE multi-step solver (dassl/dasslrt of Petzold modified by Dassault Systemes))
+
+Integration terminated successfully at T = 10
+   CPU-time for integration                : 0.575 seconds
+   CPU-time for one grid interval          : 0.00575 milliseconds
+   CPU-time for initialization             : 0.001 seconds
+   Number of result points                 : 100003
+   Number of grid points                   : 100001
+   Number of accepted steps                : 97
+   Number of f-evaluations (dynamics)      : 105
+   Number of Jacobian-evaluations          : 93
+   Number of model time events             : 3
+   Number of input time events             : 0
+   Number of state events                  : 0
+   Number of step events                   : 0
+   Minimum integration stepsize            : 1e-07
+   Maximum integration stepsize            : 3.36
+   Maximum integration order               : 1
+Calling terminal section
+... "dsfinal.txt" creating (final states)
+
+SUCCESSFUL simulation of MMC_HVDC_AMCONF2026.Examples.VacModeTestInMasterHVDCstation
