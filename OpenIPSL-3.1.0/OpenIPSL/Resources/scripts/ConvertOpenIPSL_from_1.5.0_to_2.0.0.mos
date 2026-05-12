@@ -1,0 +1,414 @@
+// Convert from OpenIPSL 1.5.0 to OpenIPSL 2.0.0
+
+/* Examples */
+
+// Make an exception for example base class
+// (examples should normally not be extended from and hence no conversion is normally given)
+convertClass("OpenIPSL.Examples.SMIBpartial",
+             "OpenIPSL.Tests.BaseClasses.SMIB");
+
+/* Electrical */
+
+// System Base
+convertModifiers({"OpenIPSL.Electrical.SystemBase"},
+                 {"S_b"}, {"S_b=%S_b%*1e6"}, true);
+
+/** Banks **/
+
+// Shunt
+convertClass("OpenIPSL.Electrical.Banks.PwShuntC",
+             "OpenIPSL.Electrical.Banks.PwShunt");
+convertClass("OpenIPSL.Electrical.Banks.PwShuntR",
+             "OpenIPSL.Electrical.Banks.PwShunt");
+convertClass("OpenIPSL.Electrical.Banks.PwShuntB",
+             "OpenIPSL.Electrical.Banks.PwShunt");
+convertClass("OpenIPSL.Electrical.Banks.PSSE.SVC.SVC",
+             "OpenIPSL.Electrical.Banks.PSSE.SVC");
+
+convertModifiers({"OpenIPSL.Electrical.Banks.PwShuntB"},
+                 {"B"}, fill("", 0));
+convertModifiers({"OpenIPSL.Electrical.Banks.PwShuntC",
+                  "OpenIPSL.Electrical.Banks.PwShuntR"},
+                 {"Qnom","Vbase"}, fill("", 0));
+convertModifiers({"OpenIPSL.Electrical.Banks.PSSE.SVC.SVC"},
+                 {"Mvar_C"},{"var_C=%Mvar_C%*1e6%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Banks.PSSE.SVC.SVC"},
+                 {"Mvar_R"},{"var_R=%Mvar_R%*1e6%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Banks.PSSE.CSVGN1"},
+                 {"SBASE"},{"S_b=%SBASE%*1e6%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Banks.PSSE.CSVGN1"},
+                 {"anglev0"},{"angle_0=%anglev0%*Modelica.Constants.pi/180"});
+convertElement({"OpenIPSL.Electrical.Banks.PSSE.CSVGN1"},
+                 {"v0"},{"v_0"});
+convertModifiers({"OpenIPSL.Electrical.Banks.PSSE.CSVGN1"},
+                 {"Vc0","Psh","Qsh","ImSimpleLagnonwinduplimit","imLimited"},
+                 fill("",0));
+
+convertModifiers("OpenIPSL.Electrical.Banks.Simulink.Shunt",
+     {"Qnom"},{"Qnom=%Qnom%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Banks.Simulink.Shunt",
+     {"Sbase"},{"Sbase=%Sbase%*1e6"}, true);
+
+/** Branches **/
+
+// PhaseShiftingTransformer
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"SystemBase"},{"S_b=%SystemBase%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"Vbus1"},{"V_b=%Vbus1%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"Vn1"},{"Vn=%Vn1%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"Sn"},{"Sn=%Sn%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"Vbus2","Vn2","fn","vk0","vm0","anglevk0","anglevm0","u","pst1_1","pst2_1"}, fill("",0));
+convertElement("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+     {"p_ref"}, {"pref"});
+convertClass("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.PSTransformer",
+             "OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer");
+
+convertMessage({"OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.pst1",
+                "OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer.pst2"},
+                "No support of automatic conversion for internal classes.");
+
+// PSAT.ULTC_VoltageControl
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.ULTC_VoltageControl"},
+     {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.ULTC_VoltageControl"},
+     {"Sn"}, {"Sn=%Sn%*1e6"}, true);
+convertElement({"OpenIPSL.Electrical.Branches.PSAT.ULTC_VoltageControl"},
+     {"V_0"}, {"v_0"});
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.ULTC_VoltageControl"},
+      {"fn", "deltam","d"}, fill("",0));
+
+
+// PSAT.TWTransformerWithFixedTapRatio
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+     {"R"}, {"r=%R%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+     {"X"}, {"x=%X%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+     {"Vn1"}, {"Vn=%Vn1%*1e3"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+     {"Vbus"}, {"V_b=%Vbus%*1e3"}, true);
+
+// PSAT.TwoWindingTransformer
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"Sn"}, {"Sn=%Sn%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"r"}, {"rT=%r%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"x"}, {"xT=%x%"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"V_b"}, {"V_b=%V_b%*1e3"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"Vn"}, {"Vn=%Vn%*1e3"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer"},
+                 {"kT","fn"}, fill("", 0));
+
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformerFixedTapRatio"},
+                 {"Vbus"}, {"V_b=%Vbus%"});
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformerFixedTapRatio"},
+                 {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformerFixedTapRatio"},
+                 {"fn","kT"}, fill("",0))
+
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+                 {"SystemBase"}, {"S_b=%SystemBase%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio"},
+                 {"fn","kT"}, fill("",0))
+
+convertClass({"OpenIPSL.Electrical.Branches.PSAT.TWTransformerWithFixedTapRatio",
+              "OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformerFixedTapRatio"},
+              "OpenIPSL.Electrical.Branches.PSAT.TwoWindingTransformer");
+convertClass("OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer_1",
+             "OpenIPSL.Electrical.Branches.PSAT.PhaseShiftingTransformer");
+
+
+
+// PSAT ThreeWindingTransformer was moved
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+convertElement("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"Vbus"}, {"V_b"});
+convertElement("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"Vn1"}, {"Vn"});
+convertModifiers("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"Vn2","Vn3","fn"}, fill("",0));
+convertElement("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"R12","R13","R23","X12","X13","X23"}, {"r12","r13","r23","x12","x13","x23"});
+convertElement("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+                 {"branch1_1","branch2_1","branch3_1"},{"branch1","branch2","branch3"});
+convertClass("OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.ThreeWindingTransformer",
+             "OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer");
+
+convertMessage({"OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.Branch1",
+              "OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.Branch2",
+              "OpenIPSL.Electrical.Branches.PSAT.ThreeWindingTransformer.Branch3"},
+              "No support of automatic conversion for internal classes.");
+
+// PSSE TwoWindingTransformer
+convertModifiers("OpenIPSL.Electrical.Branches.PSSE.TwoWindingTransformer",
+                {"VNOM1"},{"VNOM1=%VNOM1%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSSE.TwoWindingTransformer",
+                {"VNOM2"},{"VNOM2=%VNOM2%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSSE.TwoWindingTransformer",
+                {"VB1"},{"VB1=%VB1%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSSE.TwoWindingTransformer",
+                {"VB2"},{"VB2=%VB2%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Branches.PSSE.TwoWindingTransformer",
+                {"S_n"},{"S_n=%S_n%*1e6"}, true);
+
+/** Buses **/
+
+// Bus
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Electrical.Buses.Bus",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.Bus",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.Bus",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+// BusExt
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Electrical.Buses.BusExt",
+     {"V"},{"v=%V%"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.BusExt",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.BusExt",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.BusExt",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+// PSAT infinitbus2 removed
+convertModifiers("OpenIPSL.Electrical.Buses.InfiniteBus2",
+      {"angle"}, {"angle_0=%angle%*Modelica.Constants.pi/180"}, true);
+convertModifiers("OpenIPSL.Electrical.Buses.InfiniteBus2",
+      {"V"}, fill("", 0));
+convertClass("OpenIPSL.Electrical.Buses.InfiniteBus2",
+             "OpenIPSL.Electrical.Buses.InfiniteBus");
+
+/** Loads **/
+
+convertClass("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+             "OpenIPSL.Electrical.Loads.PSAT.VoltageDependent");
+
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"Sn"},{"Sn=%Sn%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+     {"V_b"}, fill("", 0));
+
+// PSAT loads
+convertClass("OpenIPSL.Electrical.Loads.PSAT.FrequencyDependentLoad",
+             "OpenIPSL.Electrical.Loads.PSAT.FrequencyDependent");
+convertClass("OpenIPSL.Electrical.Loads.PSAT.VoltDependant",
+             "OpenIPSL.Electrical.Loads.PSAT.VoltageDependent");
+convertClass("OpenIPSL.Electrical.Loads.PSAT.Mixed_Load",
+             "OpenIPSL.Electrical.Loads.PSAT.Mixed");
+convertClass("OpenIPSL.Electrical.Loads.PSAT.LOADPQ",
+             "OpenIPSL.Electrical.Loads.PSAT.PQ");
+convertClass("OpenIPSL.Electrical.Loads.PSAT.LOADPQ_variation",
+             "OpenIPSL.Electrical.Loads.PSAT.PQvar");
+
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.BaseClasses.baseLoad",
+     {"V_b"}, fill("", 0), true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.BaseClasses.baseLoad",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.BaseClasses.baseLoad",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.BaseClasses.baseLoad",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSAT.BaseClasses.baseLoad",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+// PSSE base load
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Electrical.Loads.PSSE.BaseClasses.baseLoad",
+     {"V_b"}, fill("", 0), true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSSE.BaseClasses.baseLoad",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSSE.BaseClasses.baseLoad",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSSE.BaseClasses.baseLoad",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Loads.PSSE.BaseClasses.baseLoad",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+/** Machines **/
+
+// PSAT base machine
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"Sn"},{"Sn=%Sn%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"Vn"},{"Vn=%Vn%*1e3"}, true);
+
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSAT.BaseClasses.baseMachine",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+// PSSE base machine
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+{"M_b"},{"M_b=%M_b%*1e6"}, true);
+
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Machines.PSSE.BaseClasses.baseMachine",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+/** Controls **/
+convertElement({"OpenIPSL.Electrical.Controls.PSAT.TG.TGtypeII"},
+               {"W"},{"w"});
+convertElement({"OpenIPSL.Electrical.Controls.PSAT.TG.TGTypeIII"},
+               {"Pm"},{"pm"});
+convertClass("OpenIPSL.Electrical.Controls.PSAT.TG.TGtypeII",
+             "OpenIPSL.Electrical.Controls.PSAT.TG.TGTypeII");
+convertMessage({"OpenIPSL.Electrical.Controls.PSAT.TG.TGTypeV",
+                "OpenIPSL.Electrical.Controls.PSAT.TG.TGTypeVI"},
+                "No support of automatic conversion for internal classes.")
+
+convertElement({"OpenIPSL.Electrical.Controls.PSSE.OEL.OEL"},
+               {"compasitor"},{"comparisor"});
+
+convertElement({"OpenIPSL.Electrical.Controls.PSSE.ES.IEEEX1"},
+               {"T_F1"},{"T_F"});
+
+convertClass("OpenIPSL.Electrical.Controls.PSSE.TG.GGOV1",
+             "OpenIPSL.Electrical.Controls.PSSE.TG.BaseClasses.GGOV1");
+convertClass("OpenIPSL.Electrical.Controls.PSSE.TG.GGOV1.GGOV1",
+             "OpenIPSL.Electrical.Controls.PSSE.TG.GGOV1");
+convertMessage({"OpenIPSL.Electrical.Controls.PSSE.TG.GGOV1.GGOV1"},
+              "No support of automatic conversion for internal classes.");
+convertElement({"OpenIPSL.Electrical.Controls.PSSE.TG.GAST"},
+               {"Reference"},{"PMECH0"});
+
+/** FACTS **/
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.STATCOM"},
+     {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.STATCOM"},
+     {"Vbus"}, {"V_b=%Vbus%*1e3"}, true);
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.STATCOM"},
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertElement({"OpenIPSL.Electrical.FACTS.PSAT.STATCOM"},
+     {"Qg"},{"Q"});
+
+convertClass("OpenIPSL.Electrical.FACTS.PSAT.TCSCAlpha",
+             "OpenIPSL.Electrical.FACTS.PSAT.TCSC")
+convertClass("OpenIPSL.Electrical.FACTS.PSAT.TCSCReactance",
+             "OpenIPSL.Electrical.FACTS.PSAT.TCSC")
+
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.TCSCAlpha"},
+                 {"SystemBase"}, {"S_b=%SystemBase%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.TCSCReactance"},
+                  {"Sb"}, {"S_b=%Sb%*1e6"}, true);
+convertModifiers({"OpenIPSL.Electrical.FACTS.PSAT.TCSCAlpha",
+                  "OpenIPSL.Electrical.FACTS.PSAT.TCSCReactance"},
+                  {"Vbus"}, {"V_b"});
+convertMessage({"OpenIPSL.Electrical.FACTS.PSAT.TCSCAlpha",
+                "OpenIPSL.Electrical.FACTS.PSAT.TCSCReactance"},
+                "Parameters of this component need to get checked manually.")
+
+/** Solar **/
+
+convertModifiers({"OpenIPSL.Electrical.Solar.KTH.Auxiliary.PQ1",
+                  "OpenIPSL.Electrical.Solar.KTH.PFmodelmpptCorrected05MW"},
+                 {"SystemBase"},{"S_b=%SustemBase%*1e6%"}, true);
+/** Wind **/
+convertModifiers({"OpenIPSL.Electrical.Wind.PSAT.PSAT_Type_3.ElecBlk",
+                  "OpenIPSL.Electrical.Wind.PSAT.PSAT_Type_3.ElecDynBlk"},
+                 {"angle0"},{"angle_0=%angle0%*Modelica.Constants.pi/180"});
+
+convertElement("OpenIPSL.Electrical.Wind.PSSE.WT4G.WT4E1",
+               {"K7"},{"integratorLimVar"});
+convertModifiers("OpenIPSL.Electrical.Wind.GE.Type_3.Turbine.Turbine_Model",
+                 {"eps"},fill("",0));
+
+
+/** Essentials **/
+
+// pfComponent
+convertModifiers("OpenIPSL.Electrical.Essentials.pfComponent",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Electrical.Essentials.pfComponent",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Electrical.Essentials.pfComponent",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Essentials.pfComponent",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Electrical.Essentials.pfComponent",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+
+/* NonElectrical */
+
+convertElement({"OpenIPSL.NonElectrical.Continuous.RampTrackingFilter"},
+               {"StartValue"},{"y_start"});
+convertMessage({"OpenIPSL.NonElectrical.Continuous.RampTrackingFilter"},
+                "No support of automatic conversion for internal classes.");
+convertMessage({"OpenIPSL.NonElectrical.Logical.Relay4"},
+                "This model was removed without replacement, no support of automatic conversion.");
+
+
+convertElement("OpenIPSL.NonElectrical.Logical.HV_GATE",
+               {"n1","n2","p"},{"u1","u2","y"});
+convertElement("OpenIPSL.NonElectrical.Logical.LV_GATE",
+               {"n1","n2","p"},{"u1","u2","y"});
+
+/* Interfaces */
+
+// Interfaces.Generator
+// the following lines are repetition of the pfComponent conversion
+// as Dymola for some reason does not convert the extended classes
+convertModifiers("OpenIPSL.Interfaces.Generator",
+     {"V_b"},{"V_b=%V_b%*1e3"}, true);
+convertModifiers("OpenIPSL.Interfaces.Generator",
+     {"V_0"},{"v_0=%V_0%"}, true);
+convertModifiers("OpenIPSL.Interfaces.Generator",
+     {"P_0"},{" P_0=%P_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Interfaces.Generator",
+     {"Q_0"},{"Q_0=%Q_0%*1e6"}, true);
+convertModifiers("OpenIPSL.Interfaces.Generator",
+     {"S_b"},{"S_b=%S_b%*1e6"}, true);
+
+/* Types */
+
+// custom types have no longer any hard coded scaling, conversion is not perfect since it does not take care of the scaling
+convertClass("OpenIPSL.Types.ActivePowerMega",
+             "OpenIPSL.Types.ActivePower");
+convertClass("OpenIPSL.Types.ApparentPowerMega",
+             "OpenIPSL.Types.ApparentPower");
+convertClass("OpenIPSL.Types.ReactivePowerMega",
+             "OpenIPSL.Types.ReactivePower");
+convertClass("OpenIPSL.Types.VoltageKilo",
+             "OpenIPSL.Types.Voltage");
