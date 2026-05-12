@@ -102,7 +102,7 @@ int settings(13,1)
 
 
 #    Names of initial variables
-char initialName(651,87)
+char initialName(649,87)
 SysData.S_b
 SysData.fn
 Pref.height
@@ -697,8 +697,6 @@ mMC_CompactControlBLock_withblocking.Qref_mock.y
 mMC_CompactControlBLock_withblocking.Vac_ref_mock.k
 mMC_CompactControlBLock_withblocking.theta_ref_mock.k
 mMC_CompactControlBLock_withblocking.f_ref_mock.k
-VdcRef.k
-Qref.k
 theta_ref.k
 VacRef.height
 VacRef.duration
@@ -755,7 +753,7 @@ bus2.v
 bus2.angle
 bus2.angleDisplay
 
-double initialValue(651,6)
+double initialValue(649,6)
  -1  1.0000000000000000E+09       0                       0                
   1   280   # SysData.S_b
  -1      50                       0                       0                
@@ -1944,10 +1942,6 @@ double initialValue(651,6)
   1   280   # mMC_CompactControlBLock_withblocking.theta_ref_mock.k
  -1       1                       0                       0                
   1   280   # mMC_CompactControlBLock_withblocking.f_ref_mock.k
- -1       1                       0                       0                
-  1   280   # VdcRef.k
- -1  1.0000000000000001E-01       0                       0                
-  1   280   # Qref.k
  -1      30                       0                       0                
   1   280   # theta_ref.k
  -1       1                       0                       0                
@@ -2102,7 +2096,7 @@ double initialValue(651,6)
 #   Which variables will be important for initialization and continue
 #   is indicated by value in column 6 & dsStartMasks.
 #
-char initialDescription(651,127)
+char initialDescription(649,127)
 System base [V.A|MV.A]
 System frequency [Hz]
 Height of step
@@ -2697,8 +2691,6 @@ Output signal connector
 Gain value multiplied with input signal [1]
 Gain value multiplied with input signal [1]
 Gain value multiplied with input signal [1]
-Constant output value
-Constant output value
 Constant output value
 Height of ramps
 Duration of ramp (= 0.0 gives a Step) [s]

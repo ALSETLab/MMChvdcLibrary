@@ -57,23 +57,24 @@ model AvgMMCmodelTest
 equation
   connect(constantVoltage.n, ground.p) annotation (Line(points={{-145,8},{
           -146,8},{-146,-10}},        color={0,0,255}));
-  connect(VmR.y, avgMMCmodel.VmR) annotation (Line(points={{-91,-88},{
-          -16.6771,-88},{-16.6771,-29.6}}, color={0,0,127}));
-  connect(VmI.y, avgMMCmodel.VmI) annotation (Line(points={{-91,-118},{
-          -2.47143,-118},{-2.47143,-29.6}}, color={0,0,127}));
+  connect(VmR.y, avgMMCmodel.VmR) annotation (Line(points={{-91,-88},{-13.6765,
+          -88},{-13.6765,-30}},            color={0,0,127}));
+  connect(VmI.y, avgMMCmodel.VmI) annotation (Line(points={{-91,-118},{6.26471,
+          -118},{6.26471,-30}},             color={0,0,127}));
   connect(avgMMCmodel.p, bus.p)
-    annotation (Line(points={{90.8343,14},{110,14}}, color={0,0,255}));
+    annotation (Line(points={{99.3235,14},{110,14}}, color={0,0,255}));
   connect(constantVoltage.n, avgMMCmodel.pin_n) annotation (Line(points={{-145,8},
-          {-146,8},{-146,-5.2},{-131.291,-5.2}},          color={0,0,
+          {-146,8},{-146,-6},{-133.324,-6}},              color={0,0,
           255}));
   connect(avgMMCmodel.pin_p, constantVoltage.p) annotation (Line(points={{
-          -131.291,38},{-145,38},{-145,30}},  color={0,0,255}));
+          -133.324,37.2},{-145,37.2},{-145,30}},
+                                              color={0,0,255}));
   connect(bus.p, pQ_Sensor.p)
     annotation (Line(points={{110,14},{124,14}}, color={0,0,255}));
   connect(infiniteBus.p, pQ_Sensor.n)
     annotation (Line(points={{156,14},{146,14}}, color={0,0,255}));
-  connect(avgMMCmodel.V_m_dc, Vmdc.y) annotation (Line(points={{-67.6886,
-          -29.6},{-67.6886,-54},{-91,-54}}, color={0,0,127}));
+  connect(avgMMCmodel.V_m_dc, Vmdc.y) annotation (Line(points={{-66.8529,-30},{
+          -66.8529,-54},{-91,-54}},         color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, grid={2,2})),
                                                                  Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-160,-140},

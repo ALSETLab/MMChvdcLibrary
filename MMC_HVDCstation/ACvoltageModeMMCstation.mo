@@ -3,17 +3,17 @@ model ACvoltageModeMMCstation "MMC HVDC station with only AC voltage control."
   import CM = Modelica.ComplexMath;
   import      Modelica.Units.SI;
   import Complex;
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.SItoPU sI_to_pu(
+  ComponentLibrary.BasicBlocks.Tranformation.SItoPU                     sI_to_pu(
     Vb=Vb,
     MVAb=MVAb,
     Vdcb=Vdcb) annotation (Placement(transformation(extent={{-69,-9},{69,9}},
           origin={-11,89})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.PUtoSI pu_to_SI(Vb=Vb,
+  ComponentLibrary.BasicBlocks.Tranformation.PUtoSI                     pu_to_SI(Vb=Vb,
       Vdcb=Vdcb) annotation (Placement(transformation(
         extent={{-26,-8},{26,8}},
         rotation=180,
         origin={132,82})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.EnergyControl.VariableRefEnergyControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.EnergyControl.VariableRefEnergyControl
     EnergyControl(
     k=10,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -21,7 +21,7 @@ model ACvoltageModeMMCstation "MMC HVDC station with only AC voltage control."
     x_start=0,
     y_start=0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={-86,20})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.DCcurrentControl.DCcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.DCcurrentControl.DCcurrentControl
     dCsideModulation(
     k=1,
     T=0.004/3,
@@ -181,17 +181,17 @@ protected
   parameter Real ACq0 = vmq0pu - vgq0 - (Xr+L_arm/2) * id0pu "Initial output of q axis current PI controller";
 
 public
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.dqToRI dq_to_RI
+  ComponentLibrary.BasicBlocks.Tranformation.dqToRI                     dq_to_RI
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={170,30})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=270,
         origin={0,58})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq1
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq1
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=270,
@@ -207,7 +207,7 @@ public
         extent={{-9,-9},{9,9}},
         rotation=270,
         origin={187,-109})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.dAxisACcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.dAxisACcurrentControl
     aCdaxisModulation(
     fb=avgMMCmodel.SysData.fn,
     Xr=avgMMCmodel.Xr,
@@ -219,7 +219,7 @@ public
     Kp=1.5,
     y_start=ACd0)
     annotation (Placement(transformation(extent={{100,-68},{140,-28}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.qAxisACcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.qAxisACcurrentControl
     aCqaxisModulation(
     fb=avgMMCmodel.SysData.fn,
     Xr=avgMMCmodel.Xr,
@@ -231,9 +231,9 @@ public
     initType=Modelica.Blocks.Types.Init.InitialOutput,
     y_start=ACq0)
     annotation (Placement(transformation(extent={{100,-116},{140,-76}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Calculator.PQcalculator pQ_calculator
+  ComponentLibrary.BasicBlocks.Calculator.PQcalculator                     pQ_calculator
     annotation (Placement(transformation(extent={{-168,-40},{-128,0}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.dAxisACvoltageControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.dAxisACvoltageControl
     aCd_axisVoltageControl(
     k=10,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -241,7 +241,7 @@ public
     x_start=0,
     y_start=0)
     annotation (Placement(transformation(extent={{-84,-108},{-44,-68}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.qAxisACvoltageControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.qAxisACvoltageControl
     aCq_axisVoltageControl(
     k=10,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -249,17 +249,17 @@ public
     x_start=0,
     y_start=0)
     annotation (Placement(transformation(extent={{-84,-60},{-44,-20}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.PolarToComplex
+  ComponentLibrary.BasicBlocks.Tranformation.PolarToComplex
     polar2Complex annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=180,
         origin={-30,-160})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq2
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq2
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=180,
         origin={-70,-160})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.PLL.Synchronization synchronization02_1(
+  ComponentLibrary.BasicBlocks.PLL.Synchronization                     synchronization02_1(
     fb=50,
     k_filt=10,
     T_filt=0.001,
@@ -297,7 +297,7 @@ public
         rotation=90,
         origin={100,-164})));
 protected
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Calculator.EnergyCalculator energy_Calculator(C_eq=6*
+  ComponentLibrary.BasicBlocks.Calculator.EnergyCalculator                     energy_Calculator(C_eq=6*
         C_sub/N_sub)
     annotation (Placement(transformation(extent={{-160,10},{-140,30}})));
 equation

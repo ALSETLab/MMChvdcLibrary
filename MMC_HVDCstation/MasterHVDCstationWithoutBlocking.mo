@@ -45,17 +45,17 @@ model MasterHVDCstationWithoutBlocking
   parameter Real Wmmc_0 "Energy reference (pu)"
     annotation (Dialog(group="Power flow data"));
 
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.SItoPU sI_to_pu(
+  ComponentLibrary.BasicBlocks.Tranformation.SItoPU                     sI_to_pu(
     Vb=Vb,
     MVAb=MVAb,
     Vdcb=Vdcb) annotation (Placement(transformation(extent={{-40,-7},{40,7}},
           origin={-60,157})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.PUtoSI pu_to_SI(Vb=Vb,
+  ComponentLibrary.BasicBlocks.Tranformation.PUtoSI                     pu_to_SI(Vb=Vb,
       Vdcb=Vdcb) annotation (Placement(transformation(
         extent={{-20,-9},{20,9}},
         rotation=180,
         origin={140,163})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.EnergyControl.VariableRefEnergyControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.EnergyControl.VariableRefEnergyControl
     EnergyControl(
     k=5,
     T(displayUnit="ms") = 0.001*(50/3),
@@ -63,7 +63,7 @@ model MasterHVDCstationWithoutBlocking
     x_start=0,
     y_start=W_0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={-100,66})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ActivePowerControl.ActivePowerControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ActivePowerControl.ActivePowerControl
     powerControl(
     k=1,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -71,13 +71,13 @@ model MasterHVDCstationWithoutBlocking
     x_start=0,
     y_start=P_0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={-100,0})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ReactivePowerControl.ReactivePowerControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ReactivePowerControl.ReactivePowerControl
     reactivePowerControl(
     k=10,
     initType=Modelica.Blocks.Types.Init.InitialOutput,
     y_start=Q_0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={-100,-60})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.DCcurrentControl.DCcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.DCcurrentControl.DCcurrentControl
     dCsideModulation(
     k=1,
     T(displayUnit="ms") = 0.001*(4/3),
@@ -85,7 +85,7 @@ model MasterHVDCstationWithoutBlocking
     x_start=0,
     y_start=DC_0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,54})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.dAxisACcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.dAxisACcurrentControl
     aCside_R_Modulation(
     fb=avgMMCmodel_withBlock2_1.SysData.fn,
     Xr=avgMMCmodel_withBlock2_1.Xr,
@@ -97,7 +97,7 @@ model MasterHVDCstationWithoutBlocking
     initType=Modelica.Blocks.Types.Init.InitialOutput,
     y_start=ACd0) annotation (Placement(transformation(extent={{-20,-20},{20,20}},
           origin={120,-6})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.qAxisACcurrentControl
+  ComponentLibrary.ControlBlocks.InnerLoopControls.ACcurrentControl.qAxisACcurrentControl
     aCside_I_Modulation(
     fb=avgMMCmodel_withBlock2_1.SysData.fn,
     Xr=avgMMCmodel_withBlock2_1.Xr,
@@ -129,15 +129,15 @@ model MasterHVDCstationWithoutBlocking
     Q_ref=Q_0*MVAb*1E6,
     v_ref=V_0) annotation (Placement(transformation(extent={{-78,-23.0001},{78,
             23.0001}}, origin={-10,211})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Calculator.PQcalculator pQ_calculator
+  ComponentLibrary.BasicBlocks.Calculator.PQcalculator                     pQ_calculator
     annotation (Placement(transformation(extent={{-172,60},{-152,80}})));
 public
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.dqToRI dq_to_RI
+  ComponentLibrary.BasicBlocks.Tranformation.dqToRI                     dq_to_RI
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={170,130})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=270,
@@ -147,7 +147,7 @@ public
         extent={{-4,-4},{4,4}},
         rotation=270,
         origin={30,130})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq1
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq1
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=270,
@@ -168,7 +168,7 @@ public
           extent={{-210,10},{-190,30}})));
   OpenIPSL.Interfaces.PwPin pwPin annotation (Placement(transformation(extent={{190,92},
             {210,112}}),        iconTransformation(extent={{190,92},{210,112}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.DCvoltageControl.DCvotlageControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.DCvoltageControl.DCvotlageControl
     DCvoltageControl(
     k=5,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -188,7 +188,7 @@ public
     annotation (Placement(transformation(extent={{-4,4},{4,-4}},
         rotation=90,
         origin={4,94})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.PLL.Synchronization synchronization02_1(
+  ComponentLibrary.BasicBlocks.PLL.Synchronization                     synchronization02_1(
     fb=fb,
     k_filt=10,
     T_filt=0.001,
@@ -203,17 +203,17 @@ public
     initType_i=Modelica.Blocks.Types.Init.InitialOutput,
     y_start_i=0)
     annotation (Placement(transformation(extent={{-42,-160},{-22,-140}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.PolarToComplex
+  ComponentLibrary.BasicBlocks.Tranformation.PolarToComplex
     polar2Complex1 annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=180,
         origin={44,-150})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Tranformation.RITodq rI_to_dq5
+  ComponentLibrary.BasicBlocks.Tranformation.RITodq                     rI_to_dq5
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=180,
         origin={10,-150})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.dAxisACvoltageControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.dAxisACvoltageControl
     aCd_axisVoltageControl1(
     k=10,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -221,7 +221,7 @@ public
     x_start=0,
     y_start=0)
     annotation (Placement(transformation(extent={{0,-128},{40,-88}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.qAxisACvoltageControl
+  ComponentLibrary.ControlBlocks.OuterLoopControls.ACvoltageControl.qAxisACvoltageControl
     aCq_axisVoltageControl1(
     k=10,
     T(displayUnit="ms") = 0.001*(100/3),
@@ -237,7 +237,7 @@ public
         extent={{-6,6},{6,-6}},
         rotation=0,
         origin={162,-200})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Calculator.EnergyCalculator energy_Calculator(C_eq=6*
+  ComponentLibrary.BasicBlocks.Calculator.EnergyCalculator                     energy_Calculator(C_eq=6*
         C_sub/N_sub)
     annotation (Placement(transformation(extent={{-170,110},{-150,130}})));
   Modelica.Blocks.Interfaces.RealInput Pref if Vdc_Pac_flag "Reference AC Active Power (pu)"  annotation (Placement(
