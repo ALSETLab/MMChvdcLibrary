@@ -13,9 +13,9 @@ model VacModeTest "Tests the AC voltage mode (Vac control)."
     angle_0=0,
     displayPF=true)
     annotation (Placement(transformation(extent={{34,24},{54,44}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Sensor.ACpowerSensor pQ_Sensor
+  ComponentLibrary.BasicBlocks.Sensor.ACpowerSensor                     pQ_Sensor
     annotation (Placement(transformation(extent={{26,30},{38,38}})));
-  MMC_HVDCstation.MasterHVDCstationWithoutBlocking      mMC_CompactControlBLock_withblocking(
+  MMC_HVDCstation.MasterHVDCstation mMC_CompactControlBLock_withblocking(
     Vdc_Pac_flag=true,
     Vac_Qac_flag=false,
     Rr=0.001,
@@ -35,7 +35,10 @@ model VacModeTest "Tests the AC voltage mode (Vac control)."
     Q_0=0,
     Vdc_0=1,
     Wmmc_0=1) annotation (Placement(transformation(extent={{-20,0},{20,48}})));
-  Modelica.Blocks.Sources.Constant theta_ref(k=30) "Reference angle (degree)"
+  Modelica.Blocks.Sources.Step     theta_ref(
+    height=210,
+    offset=-180,
+    startTime=1)                                   "Reference angle (degree)"
     annotation (Placement(transformation(extent={{-56,-52},{-48,-44}})));
   Modelica.Blocks.Sources.Ramp     VacRef(
     height=1,

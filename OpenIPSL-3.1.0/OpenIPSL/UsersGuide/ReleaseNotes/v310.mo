@@ -1,4 +1,4 @@
-﻿within OpenIPSL.UsersGuide.ReleaseNotes;
+within OpenIPSL.UsersGuide.ReleaseNotes;
 class v310 "Version 3.1.0 (2026-02-25)"
   extends Modelica.Icons.ReleaseNotes;
   annotation (Documentation(info="<html>

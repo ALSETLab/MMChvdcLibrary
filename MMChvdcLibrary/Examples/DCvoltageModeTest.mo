@@ -25,10 +25,10 @@ model DCvoltageModeTest
     annotation (Placement(transformation(extent={{-40,-40},{-20,-20}})));
   Modelica.Electrical.Analog.Basic.Ground ground
     annotation (Placement(transformation(extent={{-60,-14},{-40,6}})));
-  MMC_HVDC_BlackStart.ComponentLibrary.BasicBlocks.Sensor.ACpowerSensor pQ_Sensor(S_b=
+  ComponentLibrary.BasicBlocks.Sensor.ACpowerSensor                     pQ_Sensor(S_b=
         SysData.S_b)
     annotation (Placement(transformation(extent={{30,30},{44,38}})));
-  MMC_HVDCstation.MasterHVDCstationWithoutBlocking            mMC_voltage_Mode(
+  MMC_HVDCstation.MasterHVDCstation mMC_voltage_Mode(
     Vdc_Pac_flag=false,
     Rr=0.001,
     Xr=0.18,
