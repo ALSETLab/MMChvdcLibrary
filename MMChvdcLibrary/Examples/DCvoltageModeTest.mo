@@ -75,12 +75,14 @@ model DCvoltageModeTest
     annotation (Placement(transformation(extent={{-116,30},{-96,50}})));
 equation
   connect(capacitor.p, mMC_voltage_Mode.pin_p) annotation (Line(points={{-50,50},
-          {-50,60},{-32,60},{-32,46},{-20,46}},
+          {-50,60},{-32,60},{-32,46.2222},{-18.1818,46.2222}},
                                               color={0,0,255}));
   connect(capacitor.n, mMC_voltage_Mode.pin_n) annotation (Line(points={{-50,30},
-          {-50,20},{-32,20},{-32,26},{-20,26}},        color={0,0,255}));
+          {-50,20},{-32,20},{-32,28.4444},{-18.1818,28.4444}},
+                                                       color={0,0,255}));
   connect(ground.p, mMC_voltage_Mode.pin_n) annotation (Line(points={{-50,6},{
-          -50,20},{-32,20},{-32,26},{-20,26}},    color={0,0,255}));
+          -50,20},{-32,20},{-32,28.4444},{-18.1818,28.4444}},
+                                                  color={0,0,255}));
   connect(pQ_Sensor.n, bus1.p)
     annotation (Line(points={{44,34},{60,34}},
                                              color={0,0,255}));
@@ -88,17 +90,22 @@ equation
     annotation (Line(points={{60,34},{80,34}},
                                              color={0,0,255}));
   connect(signalCurrent.n, mMC_voltage_Mode.pin_p) annotation (Line(points={{-68,50},
-          {-68,60},{-32,60},{-32,46},{-20,46}},      color={0,0,255}));
+          {-68,60},{-32,60},{-32,46.2222},{-18.1818,46.2222}},
+                                                     color={0,0,255}));
   connect(signalCurrent.p, mMC_voltage_Mode.pin_n) annotation (Line(points={{-68,30},
-          {-68,20},{-32,20},{-32,26},{-20,26}},            color={0,0,255}));
+          {-68,20},{-32,20},{-32,28.4444},{-18.1818,28.4444}},
+                                                           color={0,0,255}));
   connect(CurrentStep.y, signalCurrent.i) annotation (Line(points={{-95,40},{
           -80,40}},            color={0,0,127}));
   connect(Qref.y, mMC_voltage_Mode.Qref)
-    annotation (Line(points={{-19,-70},{-4,-70},{-4,2}},   color={0,0,127}));
+    annotation (Line(points={{-19,-70},{-3.63636,-70},{-3.63636,7.11111}},
+                                                           color={0,0,127}));
   connect(Vdc_ref.y, mMC_voltage_Mode.Vdc_ref)
-    annotation (Line(points={{-19,-30},{-16,-30},{-16,2}}, color={0,0,127}));
+    annotation (Line(points={{-19,-30},{-14.5455,-30},{-14.5455,7.11111}},
+                                                           color={0,0,127}));
   connect(mMC_voltage_Mode.pwPin, pQ_Sensor.p)
-    annotation (Line(points={{20,34.2},{20,34},{30,34}}, color={0,0,255}));
+    annotation (Line(points={{18.1818,35.7333},{18.1818,34},{30,34}},
+                                                         color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, grid={2,2})),
                                                                  Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-120,-100},{100,100}})),

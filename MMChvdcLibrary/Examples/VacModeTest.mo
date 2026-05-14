@@ -78,27 +78,30 @@ equation
   connect(pQ_Sensor.n, bus1.p)
     annotation (Line(points={{38,34},{44,34}}, color={0,0,255}));
   connect(Pref.y, mMC_CompactControlBLock_withblocking.Pref)
-    annotation (Line(points={{-47.6,-12},{-10,-12},{-10,2}}, color={0,0,127}));
+    annotation (Line(points={{-47.6,-12},{-9.09091,-12},{-9.09091,7.11111}},
+                                                             color={0,0,127}));
   connect(mMC_CompactControlBLock_withblocking.pwPin, pQ_Sensor.p) annotation (
-      Line(points={{20,34.2},{20,34},{26,34}},             color={0,0,255}));
+      Line(points={{18.1818,35.7333},{18.1818,34},{26,34}},color={0,0,255}));
   connect(VacRef.y, mMC_CompactControlBLock_withblocking.Vac_ref)
-    annotation (Line(points={{-47.6,-30},{4,-30},{4,2}},     color={0,0,127}));
+    annotation (Line(points={{-47.6,-30},{3.63636,-30},{3.63636,7.11111}},
+                                                             color={0,0,127}));
   connect(theta_ref.y, mMC_CompactControlBLock_withblocking.theta_ref)
-    annotation (Line(points={{-47.6,-48},{10,-48},{10,2}},   color={0,0,127}));
+    annotation (Line(points={{-47.6,-48},{9.09091,-48},{9.09091,7.11111}},
+                                                             color={0,0,127}));
   connect(f_ref.y, mMC_CompactControlBLock_withblocking.f_ref)
-    annotation (Line(points={{-47.6,-68},{16,-68},{16,2}},
+    annotation (Line(points={{-47.6,-68},{14.5455,-68},{14.5455,7.11111}},
                                                          color={0,0,127}));
   connect(pwLine1.n,bus2. p)
     annotation (Line(points={{66,-15},{66,-36}},color={0,0,255}));
   connect(constantVoltage.n, mMC_CompactControlBLock_withblocking.pin_n)
-    annotation (Line(points={{-80,30},{-80,20},{-40,20},{-40,26},{-20,26}},
-                                                 color={0,0,255}));
+    annotation (Line(points={{-80,30},{-80,20},{-40,20},{-40,28.4444},{-18.1818,
+          28.4444}},                             color={0,0,255}));
   connect(ground1.p, mMC_CompactControlBLock_withblocking.pin_n)
-    annotation (Line(points={{-60,14},{-60,20},{-40,20},{-40,26},{-20,26}},
-                                                          color={0,0,255}));
+    annotation (Line(points={{-60,14},{-60,20},{-40,20},{-40,28.4444},{-18.1818,
+          28.4444}},                                      color={0,0,255}));
   connect(constantVoltage.p, mMC_CompactControlBLock_withblocking.pin_p)
-    annotation (Line(points={{-80,50},{-80,54},{-40,54},{-40,46},{-20,46}},
-                                                 color={0,0,255}));
+    annotation (Line(points={{-80,50},{-80,54},{-40,54},{-40,46.2222},{-18.1818,
+          46.2222}},                             color={0,0,255}));
   connect(bus1.p, pwLine1.p)
     annotation (Line(points={{44,34},{66,34},{66,3}}, color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, grid={2,2})),
