@@ -1,6 +1,0 @@
-// Load OpenIPSL
-openModel("C:\Users\chowdm5\Documents\GitHub\MMC_HVDC_AMCONF2026\OpenIPSL-3.1.0\OpenIPSL\package.mo")
-//Load Project
-openModel("C:\Users\chowdm5\Documents\GitHub\MMC_HVDC_AMCONF2026\MMChvdcLibrary\package.mo")
-// Change the working directory
-cd("C:\Users\chowdm5\Documents\Dymola")
