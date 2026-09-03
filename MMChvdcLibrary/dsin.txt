@@ -1,0 +1,2735 @@
+#1
+char Aclass(3,24)
+Adymosim
+1.4
+Modelica experiment file
+
+
+#    Experiment parameters
+double experiment(7,1)
+       0                   # StartTime    Time at which integration starts
+                           #              (and linearization and trimming time)
+       5                   # StopTime     Time at which integration stops
+  1.0000000000000000E-04   # Increment    Communication step size, if > 0
+       0                   # nInterval    Number of communication intervals, if > 0
+  1.0000000000000000E-03   # Tolerance    Relative precision of signals for
+                           #              simulation, linearization and trimming
+  1.0000000000000001E-05   # MaxFixedStep Maximum step size of fixed step size
+                           #              integrators, if > 0.0
+       8                   # Algorithm    Integration algorithm as integer (1...31)
+                           #
+                           #                 | model|       |        | dense | state |
+                           # Algorithm       | typ  | stiff | order  | output| event |
+                           # ----------------+------+-------+--------+-------+-------+
+                           #  1 | deabm      |  ode |   no  |  1-12  |  yes  |   no  |
+                           #  2 | lsode1     |  ode |   no  |  1-12  |  yes  |   no  |
+                           #  3 | lsode2     |  ode |  yes  |  1-5   |  yes  |   no  |
+                           #  4 | lsodar     |  ode |  both |1-12,1-5|  yes  |  yes  |
+                           #  5 | dopri5     |  ode |   no  |   5    |   no  |   no  |
+                           #  6 | dopri8     |  ode |   no  |   8    |   no  |   no  |
+                           #  7 | grk4t      |  ode |  yes  |   4    |   no  |   no  |
+                           #  8 | dassl      |  dae |  yes  |  1-5   |  yes  |  yes  |
+                           #  9 | odassl     | hdae |  yes  |  1-5   |  yes  |  yes  |
+                           # 10 | mexx       | hdae |   no  |  2-24  |   no  |   no  |
+                           # 11 | euler      |  ode |   no  |   1    |   no  |  yes  |
+                           # 12 | rkfix2     |  ode |   no  |   2    |   no  |  yes  |
+                           # 13 | rkfix3     |  ode |   no  |   3    |   no  |  yes  |
+                           # 14 | rkfix4     |  ode |   no  |   4    |   no  |  yes  |
+                           # 15 | radauIIa   |  dae |  yes  |   5    |  yes  |  yes  |
+                           # 16 | esdirk23a  |  dae |  yes  |   3    |  yes  |  yes  |
+                           # 17 | esdirk34a  |  dae |  yes  |   4    |  yes  |  yes  |
+                           # 18 | esdirk45a  |  dae |  yes  |   5    |  yes  |  yes  |
+                           # 19 | dopri45    |  ode |   no  |   5    |  yes  |  yes  |
+                           # 20 | dopri78    |  ode |   no  |   8    |   no  |  yes  |
+                           # 21 | dopri853   |  ode |   no  |   8    |  yes  |  yes  |
+                           # 23 | sharp67    |  ode |   no  |   7    |   no  |  yes  |
+                           # 24 | sdirk34hw  |  dae |  yes  |   4    |  yes  |  yes  |
+                           # 25 | sdirk34var |  dae |  yes  |   4    |  yes  |  yes  |
+                           # 26 | cerk23     |  ode |   no  |   3    |  yes  |  yes  |
+                           # 27 | cerk34     |  ode |   no  |   4    |  yes  |  yes  |
+                           # 28 | cerk45     |  ode |   no  |   5    |  yes  |  yes  |
+                           # 29 | cvode      |  ode |  yes  |  1-5   |  yes  |  yes  |
+                           # 31 | ida        |  dae |  yes  |  1-5   |  yes  |  yes  |
+                           # ---+------------+------+-------+--------+-------+-------+
+                           # euler and rkfix have fixed stepsize.
+                           # Switching between algorithms 1-14 and algorithms 15-31
+                           # requires recompilation of dymosim.
+
+
+#    Method tuning parameters
+double method(27,1)
+       1                   # grid     type of communication time grid, defined by
+                           #          = 1: equidistant points ("Increment/nInterval")
+                           #          = 2: vector of grid points ("tgrid")
+                           #          = 3: variable step integrator (automatically)
+                           #          = 4: model (call of "increment" in Dymola, e.g.
+                           #                      incr=Time > 2 then 0 else 0.1
+                           #                      dummy=increment(incr))
+                           #          grid = 1,3 is stopped by "StopTime"
+                           #          grid = 2   is stopped by "tgrid(last)"
+                           #          grid = 4   runs forever (stopped by model)
+       1                   # nt       Use every NT time instant, if grid = 3
+       3                   # dense    1/2/3 restart/step/interpolate GRID points
+       1                   # evgrid   0/1 do not/save event points in comm. time grid
+       1                   # evu      0/1 U-discontinuity does not/trigger events
+       0                   # evuord       U-discontinuity order to consider (0,1,...)
+       0                   # error    0/1/2 One message/warning/error messages
+       0                   # jac      0/1 Compute jacobian numerically/by BLOCKJ
+       0                   # xd0c     0/1 Compute/set XD0
+       0                   # f3       0/1 Ignore/use F3 of HDAE (= index 1)
+       0                   # f4       0/1 Ignore/use F4 of HDAE (= index 2)
+       0                   # f5       0/1 Ignore/use F5 of HDAE (= invar.)
+       0                   # debug    flags for debug information (1<<0 uses pdebug) 
+     100                   # pdebug       priority of debug information (1...100)
+       0                   # fmax     Maximum number of evaluations of BLOCKF, if > 0
+       0                   # ordmax   Maximum allowed integration order, if > 0
+       0                   # hmax     Maximum absolute stepsize, if > 0
+       0                   # hmin     Minimum absolute stepsize, if > 0 (use with care!)
+       0                   # h0       Stepsize to be attempted on first step, if > 0
+  2.0000000000000000E-14   # teps     Bound to check, if 2 equal time instants
+  1.0000000000000000E-10   # eveps    Hysteresis epsilon at event points
+      20                   # eviter   Maximum number of event iterations
+  9.9999999999999995E-07   # delaym   Minimum time increment in delay buffers
+       1                   # fexcep   0/1 floating exception crashes/stops dymosim
+       1                   # tscale   clock-time = tscale*simulation-time, if grid = 5
+                           #          > 1: simulation too slow
+                           #          = 1: simulation-time = real-time
+                           #          < 1: simulation too fast
+       1                   # shared   (not used)
+    2473                   # memkey   (not used)
+
+
+#    Output parameters
+int settings(13,1)
+ 0                         # lprec    0/1 do not/store result data in double
+ 1                         # lx       0/1 do not/store x  (state variables)
+ 1                         # lxd      0/1 do not/store xd (derivative of states)
+ 1                         # lu       0/1 do not/store u  (input     signals)
+ 1                         # ly       0/1 do not/store y  (output    signals)
+ 0                         # lz       0/1 do not/store z  (indicator signals)
+ 1                         # lw       0/1 do not/store w  (auxiliary signals)
+ 1                         # la       0/1 do not/store a  (alias     signals)
+ 0                         # lperf    0/1 do not/store performance indicators
+ 0                         # levent   0/1 do not/store event point
+ 1                         # lres     0/1 do not/store results on result file
+ 0                         # lshare   0/1 do not/store info data for shared memory on dsshare.txt
+ 1                         # lform    0/1 ASCII/Matlab-binary storage format of results
+                           #              (for simulation/linearization; not for trimming)
+
+
+#    Names of initial variables
+char initialName(641,67)
+SysData.S_b
+SysData.fn
+infiniteBus.S_b
+infiniteBus.enableS_b
+infiniteBus.V_b
+infiniteBus.enableV_b
+infiniteBus.fn
+infiniteBus.enablefn
+infiniteBus.P_0
+infiniteBus.enableP_0
+infiniteBus.Q_0
+infiniteBus.enableQ_0
+infiniteBus.v_0
+infiniteBus.enablev_0
+infiniteBus.angle_0
+infiniteBus.enableangle_0
+infiniteBus.displayPF
+infiniteBus.enabledisplayPF
+infiniteBus.P
+infiniteBus.Q
+infiniteBus.p.vr
+infiniteBus.p.vi
+infiniteBus.p.ir
+infiniteBus.p.ii
+Vdc_ref.height
+Vdc_ref.y
+Vdc_ref.offset
+Vdc_ref.startTime
+ground.p.v
+ground.p.i
+pQ_Sensor.S_b
+pQ_Sensor.P12PU
+pQ_Sensor.P21PU
+pQ_Sensor.Q12PU
+pQ_Sensor.Q21PU
+pQ_Sensor.P12
+pQ_Sensor.P21
+pQ_Sensor.Q12
+pQ_Sensor.Q21
+pQ_Sensor.zero_i.re
+pQ_Sensor.zero_i.im
+pQ_Sensor.zero_v.re
+pQ_Sensor.zero_v.im
+mMC_voltage_Mode.Vdc_Pac_flag
+mMC_voltage_Mode.Vac_Qac_flag
+mMC_voltage_Mode.Rr
+mMC_voltage_Mode.Xr
+mMC_voltage_Mode.L_arm
+mMC_voltage_Mode.R_arm
+mMC_voltage_Mode.C_dc
+mMC_voltage_Mode.C_sub
+mMC_voltage_Mode.N_sub
+mMC_voltage_Mode.S_b
+mMC_voltage_Mode.MVAb
+mMC_voltage_Mode.fb
+mMC_voltage_Mode.Vb
+mMC_voltage_Mode.Vdcb
+mMC_voltage_Mode.V_0
+mMC_voltage_Mode.angle_0
+mMC_voltage_Mode.P_0
+mMC_voltage_Mode.Q_0
+mMC_voltage_Mode.Vdc_0
+mMC_voltage_Mode.Wmmc_0
+mMC_voltage_Mode.sI_to_pu.Vb
+mMC_voltage_Mode.sI_to_pu.MVAb
+mMC_voltage_Mode.sI_to_pu.Vdcb
+mMC_voltage_Mode.sI_to_pu.gain5.k
+mMC_voltage_Mode.sI_to_pu.gain1.k
+mMC_voltage_Mode.sI_to_pu.gain3.k
+mMC_voltage_Mode.sI_to_pu.gain2.k
+mMC_voltage_Mode.sI_to_pu.gain17.k
+mMC_voltage_Mode.sI_to_pu.gain14.k
+mMC_voltage_Mode.sI_to_pu.gain10.k
+mMC_voltage_Mode.sI_to_pu.Vdc_pu
+mMC_voltage_Mode.sI_to_pu.Vgi_SI
+mMC_voltage_Mode.sI_to_pu.Vgr_SI
+mMC_voltage_Mode.sI_to_pu.Idc_pu
+mMC_voltage_Mode.sI_to_pu.Vceq_pu
+mMC_voltage_Mode.sI_to_pu.Vgi_pu
+mMC_voltage_Mode.sI_to_pu.Vgr_pu
+mMC_voltage_Mode.sI_to_pu.Igr_pu
+mMC_voltage_Mode.sI_to_pu.Igi_pu
+mMC_voltage_Mode.pu_to_SI.Vb
+mMC_voltage_Mode.pu_to_SI.Vdcb
+mMC_voltage_Mode.pu_to_SI.gain17.k
+mMC_voltage_Mode.pu_to_SI.gain14.k
+mMC_voltage_Mode.pu_to_SI.gain10.k
+mMC_voltage_Mode.pu_to_SI.Vmdc_pu
+mMC_voltage_Mode.pu_to_SI.Vmr_pu
+mMC_voltage_Mode.pu_to_SI.Vmdc_SI
+mMC_voltage_Mode.pu_to_SI.Vmi_pu
+mMC_voltage_Mode.pu_to_SI.Vmr_SI
+mMC_voltage_Mode.pu_to_SI.Vmi_SI
+mMC_voltage_Mode.EnergyControl.add.u1
+mMC_voltage_Mode.EnergyControl.add.y
+mMC_voltage_Mode.EnergyControl.add.k1
+mMC_voltage_Mode.EnergyControl.add.k2
+mMC_voltage_Mode.EnergyControl.div0block.u1
+mMC_voltage_Mode.EnergyControl.PI.k
+mMC_voltage_Mode.EnergyControl.PI.T
+mMC_voltage_Mode.EnergyControl.PI.initType
+mMC_voltage_Mode.EnergyControl.PI.x_start
+mMC_voltage_Mode.EnergyControl.PI.y_start
+mMC_voltage_Mode.EnergyControl.PI.y
+mMC_voltage_Mode.EnergyControl.PI.x
+mMC_voltage_Mode.EnergyControl.PI.der(x)
+mMC_voltage_Mode.EnergyControl.Wtot
+mMC_voltage_Mode.EnergyControl.Pac
+mMC_voltage_Mode.EnergyControl.idc_ref
+mMC_voltage_Mode.EnergyControl.product1.u1
+mMC_voltage_Mode.EnergyControl.gain.k
+mMC_voltage_Mode.EnergyControl.add1.k1
+mMC_voltage_Mode.EnergyControl.add1.k2
+mMC_voltage_Mode.EnergyControl.k
+mMC_voltage_Mode.EnergyControl.T
+mMC_voltage_Mode.EnergyControl.initType
+mMC_voltage_Mode.EnergyControl.x_start
+mMC_voltage_Mode.EnergyControl.y_start
+mMC_voltage_Mode.powerControl.add.u1
+mMC_voltage_Mode.powerControl.add.y
+mMC_voltage_Mode.powerControl.add.k1
+mMC_voltage_Mode.powerControl.add.k2
+mMC_voltage_Mode.powerControl.Pac_ref
+mMC_voltage_Mode.powerControl.div0block.u1
+mMC_voltage_Mode.powerControl.Vgd
+mMC_voltage_Mode.powerControl.PI.k
+mMC_voltage_Mode.powerControl.PI.T
+mMC_voltage_Mode.powerControl.PI.initType
+mMC_voltage_Mode.powerControl.PI.x_start
+mMC_voltage_Mode.powerControl.PI.y_start
+mMC_voltage_Mode.powerControl.PI.x
+mMC_voltage_Mode.powerControl.PI.der(x)
+mMC_voltage_Mode.powerControl.igd_ref
+mMC_voltage_Mode.powerControl.k
+mMC_voltage_Mode.powerControl.T
+mMC_voltage_Mode.powerControl.initType
+mMC_voltage_Mode.powerControl.x_start
+mMC_voltage_Mode.powerControl.y_start
+mMC_voltage_Mode.reactivePowerControl.add.y
+mMC_voltage_Mode.reactivePowerControl.add.k1
+mMC_voltage_Mode.reactivePowerControl.add.k2
+mMC_voltage_Mode.reactivePowerControl.div0block.y
+mMC_voltage_Mode.reactivePowerControl.integrator.k
+mMC_voltage_Mode.reactivePowerControl.integrator.use_reset
+mMC_voltage_Mode.reactivePowerControl.integrator.use_set
+mMC_voltage_Mode.reactivePowerControl.integrator.initType
+mMC_voltage_Mode.reactivePowerControl.integrator.y_start
+mMC_voltage_Mode.reactivePowerControl.integrator.y
+mMC_voltage_Mode.reactivePowerControl.integrator.der(y)
+mMC_voltage_Mode.reactivePowerControl.integrator.local_reset
+mMC_voltage_Mode.reactivePowerControl.integrator.local_set
+mMC_voltage_Mode.reactivePowerControl.Qac_ref
+mMC_voltage_Mode.reactivePowerControl.Qac
+mMC_voltage_Mode.reactivePowerControl.igq_ref
+mMC_voltage_Mode.reactivePowerControl.k
+mMC_voltage_Mode.reactivePowerControl.initType
+mMC_voltage_Mode.reactivePowerControl.y_start
+mMC_voltage_Mode.reactivePowerControl.gain.k
+mMC_voltage_Mode.dCsideModulation.add.y
+mMC_voltage_Mode.dCsideModulation.add.k1
+mMC_voltage_Mode.dCsideModulation.add.k2
+mMC_voltage_Mode.dCsideModulation.PI.k
+mMC_voltage_Mode.dCsideModulation.PI.T
+mMC_voltage_Mode.dCsideModulation.PI.initType
+mMC_voltage_Mode.dCsideModulation.PI.x_start
+mMC_voltage_Mode.dCsideModulation.PI.y_start
+mMC_voltage_Mode.dCsideModulation.PI.y
+mMC_voltage_Mode.dCsideModulation.PI.x
+mMC_voltage_Mode.dCsideModulation.PI.der(x)
+mMC_voltage_Mode.dCsideModulation.add1.k1
+mMC_voltage_Mode.dCsideModulation.add1.k2
+mMC_voltage_Mode.dCsideModulation.mdc
+mMC_voltage_Mode.dCsideModulation.k
+mMC_voltage_Mode.dCsideModulation.T
+mMC_voltage_Mode.dCsideModulation.initType
+mMC_voltage_Mode.dCsideModulation.x_start
+mMC_voltage_Mode.dCsideModulation.y_start
+mMC_voltage_Mode.aCside_R_Modulation.fb
+mMC_voltage_Mode.aCside_R_Modulation.Xr
+mMC_voltage_Mode.aCside_R_Modulation.L_arm
+mMC_voltage_Mode.aCside_R_Modulation.Vb
+mMC_voltage_Mode.aCside_R_Modulation.MVAb
+mMC_voltage_Mode.aCside_R_Modulation.add.y
+mMC_voltage_Mode.aCside_R_Modulation.add.k1
+mMC_voltage_Mode.aCside_R_Modulation.add.k2
+mMC_voltage_Mode.aCside_R_Modulation.igd
+mMC_voltage_Mode.aCside_R_Modulation.igq
+mMC_voltage_Mode.aCside_R_Modulation.md
+mMC_voltage_Mode.aCside_R_Modulation.igd_ref
+mMC_voltage_Mode.aCside_R_Modulation.gain1.k
+mMC_voltage_Mode.aCside_R_Modulation.gain1.y
+mMC_voltage_Mode.aCside_R_Modulation.add3.k1
+mMC_voltage_Mode.aCside_R_Modulation.add3.k2
+mMC_voltage_Mode.aCside_R_Modulation.add3.k3
+mMC_voltage_Mode.aCside_R_Modulation.add3.u2
+mMC_voltage_Mode.aCside_R_Modulation.Vmd
+mMC_voltage_Mode.aCside_R_Modulation.k
+mMC_voltage_Mode.aCside_R_Modulation.PI.k
+mMC_voltage_Mode.aCside_R_Modulation.PI.T
+mMC_voltage_Mode.aCside_R_Modulation.PI.initType
+mMC_voltage_Mode.aCside_R_Modulation.PI.x_start
+mMC_voltage_Mode.aCside_R_Modulation.PI.y_start
+mMC_voltage_Mode.aCside_R_Modulation.PI.x
+mMC_voltage_Mode.aCside_R_Modulation.PI.der(x)
+mMC_voltage_Mode.aCside_R_Modulation.Kp
+mMC_voltage_Mode.aCside_R_Modulation.T
+mMC_voltage_Mode.aCside_R_Modulation.initType
+mMC_voltage_Mode.aCside_R_Modulation.x_start
+mMC_voltage_Mode.aCside_R_Modulation.y_start
+mMC_voltage_Mode.aCside_I_Modulation.fb
+mMC_voltage_Mode.aCside_I_Modulation.Xr
+mMC_voltage_Mode.aCside_I_Modulation.L_arm
+mMC_voltage_Mode.aCside_I_Modulation.Vb
+mMC_voltage_Mode.aCside_I_Modulation.MVAb
+mMC_voltage_Mode.aCside_I_Modulation.add.y
+mMC_voltage_Mode.aCside_I_Modulation.add.k1
+mMC_voltage_Mode.aCside_I_Modulation.add.k2
+mMC_voltage_Mode.aCside_I_Modulation.PI.k
+mMC_voltage_Mode.aCside_I_Modulation.PI.T
+mMC_voltage_Mode.aCside_I_Modulation.PI.initType
+mMC_voltage_Mode.aCside_I_Modulation.PI.x_start
+mMC_voltage_Mode.aCside_I_Modulation.PI.y_start
+mMC_voltage_Mode.aCside_I_Modulation.PI.y
+mMC_voltage_Mode.aCside_I_Modulation.PI.x
+mMC_voltage_Mode.aCside_I_Modulation.PI.der(x)
+mMC_voltage_Mode.aCside_I_Modulation.add3.k1
+mMC_voltage_Mode.aCside_I_Modulation.add3.k2
+mMC_voltage_Mode.aCside_I_Modulation.add3.k3
+mMC_voltage_Mode.aCside_I_Modulation.add3.u3
+mMC_voltage_Mode.aCside_I_Modulation.mq
+mMC_voltage_Mode.aCside_I_Modulation.vgq
+mMC_voltage_Mode.aCside_I_Modulation.Vmq
+mMC_voltage_Mode.aCside_I_Modulation.Kp
+mMC_voltage_Mode.aCside_I_Modulation.T
+mMC_voltage_Mode.aCside_I_Modulation.initType
+mMC_voltage_Mode.aCside_I_Modulation.x_start
+mMC_voltage_Mode.aCside_I_Modulation.k
+mMC_voltage_Mode.aCside_I_Modulation.gain1.k
+mMC_voltage_Mode.aCside_I_Modulation.y_start
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Rr
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Xr
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_arm
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_arm
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_sub
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.N_sub
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S_b
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.MVAb
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.fb
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vb
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdcb
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vgd
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.teta_bus
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdc0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Wmmc_0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Q_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S0.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S0.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.xq0.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.xq0.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Ra0.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Ra0.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vt0.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vt0.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.I0.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.I0.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ir0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ii0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_modulated.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_modulated.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.delta0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_ac.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_ac.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_dc
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_dc_SI
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdc0_SI
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.dis
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Idc0
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pin_n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.R
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.T_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.alpha
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.useHeatPort
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.T
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.LossPower
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.R_actual
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.der(i)
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.L
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.n.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vm_dc.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.signalCurrent.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.signalCurrent.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.der(v)
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.C
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.n.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_current.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_current.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_current.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_current.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_voltage.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_voltage.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_R.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_R.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_I.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_I.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.der(i)
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.L
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.R
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.T_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.alpha
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.useHeatPort
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.T
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.LossPower
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.R_actual
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.der(i)
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.L
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.R
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.T_ref
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.alpha
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.useHeatPort
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.T
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.LossPower
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.R_actual
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.vg_R.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.vg_I.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor1.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor1.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor2.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor2.n.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.p.ir
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.p.ii
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block.y
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block1.y
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block2.y
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.product1.y
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.product2.y
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain3.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain1.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain2.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain5.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain4.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground2.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground2.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground3.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground3.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.wL.k
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.p.vr
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.p.vi
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.zero.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.zero.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.vs.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.vs.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.V
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.p.vr
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.p.vi
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.vs.re
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.vs.im
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground1.p.v
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground1.p.i
+mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Pdc
+mMC_voltage_Mode.dq_to_RI.angle
+mMC_voltage_Mode.gain.k
+mMC_voltage_Mode.gain.u
+mMC_voltage_Mode.gain.y
+mMC_voltage_Mode.gain1.k
+mMC_voltage_Mode.pin_n.v
+mMC_voltage_Mode.DCvoltageControl.add.y
+mMC_voltage_Mode.DCvoltageControl.add.k1
+mMC_voltage_Mode.DCvoltageControl.add.k2
+mMC_voltage_Mode.DCvoltageControl.div0block.u1
+mMC_voltage_Mode.DCvoltageControl.PI.k
+mMC_voltage_Mode.DCvoltageControl.PI.T
+mMC_voltage_Mode.DCvoltageControl.PI.initType
+mMC_voltage_Mode.DCvoltageControl.PI.x_start
+mMC_voltage_Mode.DCvoltageControl.PI.y_start
+mMC_voltage_Mode.DCvoltageControl.PI.y
+mMC_voltage_Mode.DCvoltageControl.PI.x
+mMC_voltage_Mode.DCvoltageControl.PI.der(x)
+mMC_voltage_Mode.DCvoltageControl.Vdc_ref
+mMC_voltage_Mode.DCvoltageControl.k
+mMC_voltage_Mode.DCvoltageControl.T
+mMC_voltage_Mode.DCvoltageControl.initType
+mMC_voltage_Mode.DCvoltageControl.x_start
+mMC_voltage_Mode.DCvoltageControl.y_start
+mMC_voltage_Mode.DCvoltageControl.add1.k1
+mMC_voltage_Mode.DCvoltageControl.add1.k2
+mMC_voltage_Mode.DCvoltageControl.Pref.k
+mMC_voltage_Mode.switch2.u2
+mMC_voltage_Mode.gain4.k
+mMC_voltage_Mode.gain2.k
+mMC_voltage_Mode.gain2.u
+mMC_voltage_Mode.gain2.y
+mMC_voltage_Mode.switch3.u2
+mMC_voltage_Mode.switch3.u3
+mMC_voltage_Mode.synchronization02_1.fb
+mMC_voltage_Mode.synchronization02_1.add.u1
+mMC_voltage_Mode.synchronization02_1.add.k1
+mMC_voltage_Mode.synchronization02_1.add.k2
+mMC_voltage_Mode.synchronization02_1.f_ref
+mMC_voltage_Mode.synchronization02_1.freqHZ
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.fb
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.u1
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.u2
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.k1
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.k2
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.f_ref
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.gain1.k
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.gain1.y
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.k
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.T
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.initType
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.y_start
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.y
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.der(y)
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.y
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.k1
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.k2
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.k
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.T
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.initType
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.x_start
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.y_start
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.x
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.der(x)
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.k
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.use_reset
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.use_set
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.initType
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.y_start
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.y
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.der(y)
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.local_reset
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.local_set
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_filt
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.T_filt
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_filt
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_filt
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_pi
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.T_pi
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_pi
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_pi
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.x_start_pi
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_i
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_i
+mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_i
+mMC_voltage_Mode.synchronization02_1.theta_ref
+mMC_voltage_Mode.synchronization02_1.k_filt
+mMC_voltage_Mode.synchronization02_1.T_filt
+mMC_voltage_Mode.synchronization02_1.initType_filt
+mMC_voltage_Mode.synchronization02_1.y_start_filt
+mMC_voltage_Mode.synchronization02_1.k_pi
+mMC_voltage_Mode.synchronization02_1.T_pi
+mMC_voltage_Mode.synchronization02_1.initType_pi
+mMC_voltage_Mode.synchronization02_1.x_start_pi
+mMC_voltage_Mode.synchronization02_1.y_start_pi
+mMC_voltage_Mode.synchronization02_1.k_i
+mMC_voltage_Mode.synchronization02_1.initType_i
+mMC_voltage_Mode.synchronization02_1.y_start_i
+mMC_voltage_Mode.polar2Complex1.xmag
+mMC_voltage_Mode.polar2Complex1.xr
+mMC_voltage_Mode.polar2Complex1.xi
+mMC_voltage_Mode.rI_to_dq5.xr
+mMC_voltage_Mode.rI_to_dq5.xi
+mMC_voltage_Mode.rI_to_dq5.xd
+mMC_voltage_Mode.rI_to_dq5.xq
+mMC_voltage_Mode.aCd_axisVoltageControl1.add.u1
+mMC_voltage_Mode.aCd_axisVoltageControl1.add.y
+mMC_voltage_Mode.aCd_axisVoltageControl1.add.k1
+mMC_voltage_Mode.aCd_axisVoltageControl1.add.k2
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.k
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.T
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.initType
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.x_start
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.y_start
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.x
+mMC_voltage_Mode.aCd_axisVoltageControl1.PI.der(x)
+mMC_voltage_Mode.aCd_axisVoltageControl1.Vgd_ref
+mMC_voltage_Mode.aCd_axisVoltageControl1.igq_ref
+mMC_voltage_Mode.aCd_axisVoltageControl1.k
+mMC_voltage_Mode.aCd_axisVoltageControl1.T
+mMC_voltage_Mode.aCd_axisVoltageControl1.initType
+mMC_voltage_Mode.aCd_axisVoltageControl1.x_start
+mMC_voltage_Mode.aCd_axisVoltageControl1.y_start
+mMC_voltage_Mode.aCq_axisVoltageControl1.add.u1
+mMC_voltage_Mode.aCq_axisVoltageControl1.add.y
+mMC_voltage_Mode.aCq_axisVoltageControl1.add.k1
+mMC_voltage_Mode.aCq_axisVoltageControl1.add.k2
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.k
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.T
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.initType
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.x_start
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.y_start
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.y
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.x
+mMC_voltage_Mode.aCq_axisVoltageControl1.PI.der(x)
+mMC_voltage_Mode.aCq_axisVoltageControl1.Vgq_ref
+mMC_voltage_Mode.aCq_axisVoltageControl1.igd_ref
+mMC_voltage_Mode.aCq_axisVoltageControl1.k
+mMC_voltage_Mode.aCq_axisVoltageControl1.T
+mMC_voltage_Mode.aCq_axisVoltageControl1.initType
+mMC_voltage_Mode.aCq_axisVoltageControl1.x_start
+mMC_voltage_Mode.aCq_axisVoltageControl1.y_start
+mMC_voltage_Mode.aCq_axisVoltageControl1.gain.k
+mMC_voltage_Mode.switch4.u2
+mMC_voltage_Mode.switch5.u2
+mMC_voltage_Mode.gain3.k
+mMC_voltage_Mode.gain3.u
+mMC_voltage_Mode.gain3.y
+mMC_voltage_Mode.energy_Calculator.C_eq
+mMC_voltage_Mode.energy_Calculator.gain.k
+mMC_voltage_Mode.energy_Calculator.gain.u
+mMC_voltage_Mode.Vdc_ref_SI
+mMC_voltage_Mode.Pref_SI
+mMC_voltage_Mode.Qref_SI
+mMC_voltage_Mode.Vac_ref_SI
+mMC_voltage_Mode.P_SI
+mMC_voltage_Mode.Q_SI
+mMC_voltage_Mode.S0.re
+mMC_voltage_Mode.S0.im
+mMC_voltage_Mode.xq0.re
+mMC_voltage_Mode.xq0.im
+mMC_voltage_Mode.Ra0.re
+mMC_voltage_Mode.Ra0.im
+mMC_voltage_Mode.Vt0.re
+mMC_voltage_Mode.Vt0.im
+mMC_voltage_Mode.I0_SI.re
+mMC_voltage_Mode.I0_SI.im
+mMC_voltage_Mode.ir0
+mMC_voltage_Mode.ii0
+mMC_voltage_Mode.v_m.re
+mMC_voltage_Mode.v_m.im
+mMC_voltage_Mode.delta0
+mMC_voltage_Mode.P_vsc_ac.re
+mMC_voltage_Mode.P_vsc_ac.im
+mMC_voltage_Mode.P_vsc_dc
+mMC_voltage_Mode.P_vsc_dc_pu
+mMC_voltage_Mode.R_dc
+mMC_voltage_Mode.Vdc0_SI
+mMC_voltage_Mode.dis
+mMC_voltage_Mode.Idc0_SI
+mMC_voltage_Mode.Vmdc0_SI
+mMC_voltage_Mode.Pdc_0_SI
+mMC_voltage_Mode.W_0
+mMC_voltage_Mode.Idc0_pu
+mMC_voltage_Mode.Vmdc0_pu
+mMC_voltage_Mode.DC_0
+mMC_voltage_Mode.vmr0
+mMC_voltage_Mode.vmi0
+mMC_voltage_Mode.vmd0
+mMC_voltage_Mode.vmq0
+mMC_voltage_Mode.vmd0pu
+mMC_voltage_Mode.vmq0pu
+mMC_voltage_Mode.id0
+mMC_voltage_Mode.iq0
+mMC_voltage_Mode.id0pu
+mMC_voltage_Mode.iq0pu
+mMC_voltage_Mode.vgr0
+mMC_voltage_Mode.vgi0
+mMC_voltage_Mode.vgd0_SI
+mMC_voltage_Mode.vgq0_SI
+mMC_voltage_Mode.vgd0
+mMC_voltage_Mode.vgq0
+mMC_voltage_Mode.ACd0
+mMC_voltage_Mode.ACq0
+mMC_voltage_Mode.flag2.k
+mMC_voltage_Mode.flag2.y
+mMC_voltage_Mode.flag1.k
+mMC_voltage_Mode.flag1.y
+mMC_voltage_Mode.Vdc_ref_mock.k
+mMC_voltage_Mode.Pref_mock.k
+mMC_voltage_Mode.Pref_mock.u
+mMC_voltage_Mode.Pref_mock.y
+mMC_voltage_Mode.Qref_mock.k
+mMC_voltage_Mode.Vac_ref_mock.k
+mMC_voltage_Mode.Vac_ref_mock.u
+mMC_voltage_Mode.Vac_ref_mock.y
+mMC_voltage_Mode.theta_ref_mock.k
+mMC_voltage_Mode.theta_ref_mock.u
+mMC_voltage_Mode.theta_ref_mock.y
+mMC_voltage_Mode.f_ref_mock.k
+mMC_voltage_Mode.f_ref_mock.u
+mMC_voltage_Mode.f_ref_mock.y
+capacitor.v
+capacitor.der(v)
+capacitor.p.i
+capacitor.n.v
+capacitor.C
+Qref.height
+Qref.y
+Qref.offset
+Qref.startTime
+bus1.S_b
+bus1.enableS_b
+bus1.V_b
+bus1.enableV_b
+bus1.fn
+bus1.enablefn
+bus1.P_0
+bus1.enableP_0
+bus1.Q_0
+bus1.enableQ_0
+bus1.v_0
+bus1.enablev_0
+bus1.angle_0
+bus1.enableangle_0
+bus1.displayPF
+bus1.enabledisplayPF
+bus1.p.ir
+bus1.p.ii
+bus1.v
+bus1.angle
+bus1.angleDisplay
+signalCurrent.p.v
+signalCurrent.p.i
+CurrentStep.height
+CurrentStep.offset
+CurrentStep.startTime
+
+double initialValue(641,6)
+ -1  1.0000000000000000E+09       0                       0                
+  1   280   # SysData.S_b
+ -1      50                       0                       0                
+  1   280   # SysData.fn
+ -1  1.0000000000000000E+09       0                       0                
+  1   280   # infiniteBus.S_b
+  0       1                       0                       0                
+  6   257   # infiniteBus.enableS_b
+ -1  3.2000000000000000E+05       0                       0                
+  1   280   # infiniteBus.V_b
+  0       0                       0                       0                
+  6   257   # infiniteBus.enableV_b
+ -1      50                       0                       0                
+  1   280   # infiniteBus.fn
+  0       0                       0                       0                
+  6   257   # infiniteBus.enablefn
+ -1       0                       0                       0                
+  1   280   # infiniteBus.P_0
+  0       0                       0                       0                
+  6   257   # infiniteBus.enableP_0
+ -1       0                       0                       0                
+  1   280   # infiniteBus.Q_0
+  0       0                       0                       0                
+  6   257   # infiniteBus.enableQ_0
+ -1       1                       0                       0                
+  1   280   # infiniteBus.v_0
+  0       1                       0                       0                
+  6   257   # infiniteBus.enablev_0
+ -1  5.2359877559830004E-01       0                       0                
+  1   280   # infiniteBus.angle_0
+  0       1                       0                       0                
+  6   257   # infiniteBus.enableangle_0
+ -1       1                       0                       0                
+  1   281   # infiniteBus.displayPF
+  0       1                       0                       0                
+  6   257   # infiniteBus.enabledisplayPF
+  0       0                       0                       0                
+  6   256   # infiniteBus.P
+  0       0                       0                       0                
+  6   256   # infiniteBus.Q
+  0       0                       0                       0                
+  6   260   # infiniteBus.p.vr
+  0       0                       0                       0                
+  6   260   # infiniteBus.p.vi
+  0  2.2204460492503131E-16       0                       0                
+  6   388   # infiniteBus.p.ir
+  0  2.2204460492503131E-16       0                       0                
+  6   388   # infiniteBus.p.ii
+ -1  5.0000000000000000E-01       0                       0                
+  1   280   # Vdc_ref.height
+  0       0                       0                       0                
+  6   320   # Vdc_ref.y
+ -1       1                       0                       0                
+  1   280   # Vdc_ref.offset
+ -1       2                       0                       0                
+  1   280   # Vdc_ref.startTime
+  0       0                       0                       0                
+  6   260   # ground.p.v
+  0       0                       0                       0                
+  6   388   # ground.p.i
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.S_b
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.P12PU
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.P21PU
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.Q12PU
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.Q21PU
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.P12
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.P21
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.Q12
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.Q21
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.zero_i.re
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.zero_i.im
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.zero_v.re
+  0       0                       0                       0                
+  6   256   # pQ_Sensor.zero_v.im
+  0       0                       0                       0                
+  6   257   # mMC_voltage_Mode.Vdc_Pac_flag
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.Vac_Qac_flag
+ -1  1.0000000000000000E-03       0                       0                
+  1   280   # mMC_voltage_Mode.Rr
+ -1  1.7999999999999999E-01       0                       0                
+  1   280   # mMC_voltage_Mode.Xr
+ -1  7.8000000000000000E-02       0                       0                
+  1   280   # mMC_voltage_Mode.L_arm
+ -1  7.5799999999999999E-03       0                       0                
+  1   280   # mMC_voltage_Mode.R_arm
+ -1  1.9500000000000000E-04       0                       0                
+  1   280   # mMC_voltage_Mode.C_dc
+ -1  1.0000000000000000E-02       0                       0                
+  1   280   # mMC_voltage_Mode.C_sub
+ -1     200                       0                       0                
+  1   280   # mMC_voltage_Mode.N_sub
+ -1    1000                       0                       0                
+  1   280   # mMC_voltage_Mode.S_b
+ -1    1000                       0                       0                
+  1   280   # mMC_voltage_Mode.MVAb
+ -1      50                       0                       0                
+  1   280   # mMC_voltage_Mode.fb
+ -1     320                       0                       0                
+  1   280   # mMC_voltage_Mode.Vb
+ -1     640                       0                       0                
+  1   280   # mMC_voltage_Mode.Vdcb
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.V_0
+ -1  5.2359877559830004E-01       0                       0                
+  1   280   # mMC_voltage_Mode.angle_0
+ -1  4.9830300000000000E-01       0                       0                
+  1   280   # mMC_voltage_Mode.P_0
+ -1  2.0000000000000001E-01       0                       0                
+  1   280   # mMC_voltage_Mode.Q_0
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Vdc_0
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Wmmc_0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.MVAb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vdcb
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain5.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain1.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain3.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain2.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain17.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain14.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.gain10.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vdc_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vgi_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vgr_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Idc_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vceq_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vgi_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Vgr_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Igr_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.sI_to_pu.Igi_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vdcb
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.gain17.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.gain14.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.gain10.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmdc_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmr_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmdc_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmi_pu
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmr_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.pu_to_SI.Vmi_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.add.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.div0block.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.EnergyControl.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.EnergyControl.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.PI.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.PI.y
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.EnergyControl.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.EnergyControl.PI.der(x)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.Wtot
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.Pac
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.idc_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.product1.u1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.gain.k
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.add1.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.add1.k2
+ -1       5                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.k
+ -1  1.6666666666666670E-02       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.T
+ -1       4                       1                       4                
+  1   282   # mMC_voltage_Mode.EnergyControl.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.EnergyControl.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.EnergyControl.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.add.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.powerControl.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.powerControl.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.Pac_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.div0block.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.Vgd
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.powerControl.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.powerControl.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.PI.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.powerControl.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.powerControl.PI.der(x)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.igd_ref
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.powerControl.k
+ -1  3.3333333333333340E-02       0                       0                
+  1   280   # mMC_voltage_Mode.powerControl.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.powerControl.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.powerControl.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.powerControl.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.reactivePowerControl.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.reactivePowerControl.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.div0block.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.integrator.k
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.reactivePowerControl.integrator.use_reset
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.reactivePowerControl.integrator.use_set
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.reactivePowerControl.integrator.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.integrator.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.reactivePowerControl.integrator.y
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.reactivePowerControl.integrator.der(y)
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.reactivePowerControl.integrator.local_reset
+  0       0                       0                       0                
+  6   768   # mMC_voltage_Mode.reactivePowerControl.integrator.local_set
+  0       0                       0                       0                
+  6   320   # mMC_voltage_Mode.reactivePowerControl.Qac_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.Qac
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.igq_ref
+ -1      10                       0                       0                
+  1   280   # mMC_voltage_Mode.reactivePowerControl.k
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.reactivePowerControl.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.reactivePowerControl.y_start
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.reactivePowerControl.gain.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.dCsideModulation.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.dCsideModulation.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.PI.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.PI.y
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.dCsideModulation.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.dCsideModulation.PI.der(x)
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.add1.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.add1.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.mdc
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.k
+ -1  1.3333333333333333E-03       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.T
+ -1       4                       1                       4                
+  1   282   # mMC_voltage_Mode.dCsideModulation.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.dCsideModulation.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dCsideModulation.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.fb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.Xr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.L_arm
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.Vb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.MVAb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.igd
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.igq
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.md
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.igd_ref
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.gain1.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.gain1.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.add3.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.add3.k2
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.add3.k3
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.add3.u2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.Vmd
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.aCside_R_Modulation.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.PI.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.aCside_R_Modulation.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.aCside_R_Modulation.PI.der(x)
+ -1      50                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.Kp
+ -1  1.6666666666666668E-03       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.T
+ -1       4                       1                       4                
+  1   282   # mMC_voltage_Mode.aCside_R_Modulation.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_R_Modulation.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_R_Modulation.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.fb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.Xr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.L_arm
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.Vb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.MVAb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.aCside_I_Modulation.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.y
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.aCside_I_Modulation.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.aCside_I_Modulation.PI.der(x)
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.add3.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.add3.k2
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.add3.k3
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.add3.u3
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.mq
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.vgq
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.Vmq
+ -1      50                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.Kp
+ -1  1.6666666666666668E-03       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.T
+ -1       4                       1                       4                
+  1   282   # mMC_voltage_Mode.aCside_I_Modulation.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCside_I_Modulation.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.gain1.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCside_I_Modulation.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Rr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Xr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_arm
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_arm
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_sub
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.N_sub
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S_b
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.MVAb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.fb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdcb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vgd
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.teta_bus
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdc0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Wmmc_0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Q_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S0.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.S0.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.xq0.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.xq0.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Ra0.re
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Ra0.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vt0.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vt0.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.I0.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.I0.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ir0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ii0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_modulated.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.v_modulated.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.delta0
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_ac.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_ac.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.P_vsc_dc
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_dc_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vdc0_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.dis
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Idc0
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pin_n.v
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.R
+ -1  3.0014999999999998E+02       0                 1.7976931348623157E+308
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.T_ref
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.alpha
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.n.v
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.useHeatPort
+  0  2.8814999999999998E+02       0                 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.T
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.LossPower
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_dc.R_actual
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.v
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.i
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.der(i)
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_dc.L
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.n.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor.n.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Vm_dc.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor.p.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.signalCurrent.p.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.signalCurrent.p.i
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.v
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.der(v)
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.n.v
+  0       1                       0                 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.C_eq.C
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.n.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.voltageSensor1.n.i
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_current.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_current.n.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_current.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_current.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_R_voltage.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.modulated_I_voltage.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_R.p.v
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_R.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_I.n.v
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.coupling_v_I.v
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.p.v
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.i
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.der(i)
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_R.L
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.R
+ -1  3.0014999999999998E+02       0                 1.7976931348623157E+308
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.T_ref
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.alpha
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.v
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.useHeatPort
+  0  2.8814999999999998E+02       0                 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.T
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.LossPower
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_R.R_actual
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.p.v
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.i
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.der(i)
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.L_eq_ac_I.L
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.R
+ -1  3.0014999999999998E+02       0                 1.7976931348623157E+308
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.T_ref
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.alpha
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.v
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.useHeatPort
+  0  2.8814999999999998E+02       0                 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.T
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.LossPower
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.R_eq_ac_I.R_actual
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.vg_R.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.vg_I.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor1.p.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor1.n.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor2.p.v
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentSensor2.n.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.p.ir
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.p.ii
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.pwVoltage.v
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block1.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.div0block2.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.product1.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.product2.y
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain3.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain1.k
+ -1       3                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain.k
+ -1       3                       0                       0                
+  1   280   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain2.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain5.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.gain4.k
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground2.p.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground2.p.i
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground3.p.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground3.p.i
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.wL.k
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.p.vr
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.p.vi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.zero.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.zero.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.vs.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.vs.im
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.currentPhasor.V
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.p.vr
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.p.vi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.vs.re
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.groundPhasor.vs.im
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground1.p.v
+  0       0                       0                       0                
+  6   388   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.ground1.p.i
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.avgMMCmodel_withBlock2_1.Pdc
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.dq_to_RI.angle
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.gain.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain.y
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.gain1.k
+  0       0                       0                       0                
+  6   260   # mMC_voltage_Mode.pin_n.v
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.div0block.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.DCvoltageControl.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.DCvoltageControl.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.PI.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.PI.y
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.DCvoltageControl.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.DCvoltageControl.PI.der(x)
+  0       0                       0                       0                
+  6   320   # mMC_voltage_Mode.DCvoltageControl.Vdc_ref
+ -1       5                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.k
+ -1  3.3333333333333340E-02       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.T
+ -1       4                       1                       4                
+  1   282   # mMC_voltage_Mode.DCvoltageControl.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.DCvoltageControl.y_start
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.add1.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.add1.k2
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.DCvoltageControl.Pref.k
+  0       0                       0                       0                
+  6   257   # mMC_voltage_Mode.switch2.u2
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.gain4.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.gain2.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain2.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain2.y
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.switch3.u2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.switch3.u3
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.fb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.add.u1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.add.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.f_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.freqHZ
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.fb
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.u2
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.f_ref
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.gain1.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.gain1.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.k
+  0       1                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.T
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.y
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.firstOrder.der(y)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.y
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.k1
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.add1.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.T
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.PI.der(x)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.k
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.use_reset
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.use_set
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.y
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.der(y)
+  0       0                       0                       0                
+  6   769   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.local_reset
+  0       0                       0                       0                
+  6   768   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.integrator.local_set
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_filt
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.T_filt
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_filt
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_filt
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_pi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.T_pi
+  0       1                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_pi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_pi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.x_start_pi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.k_i
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.initType_i
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.sRF_PLL.y_start_i
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.theta_ref
+ -1      10                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.k_filt
+ -1  1.0000000000000000E-03       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.T_filt
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.initType_filt
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.y_start_filt
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.synchronization02_1.k_pi
+ -1  5.0000000000000001E-04       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.T_pi
+ -1       3                       1                       4                
+  1   282   # mMC_voltage_Mode.synchronization02_1.initType_pi
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.x_start_pi
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.y_start_pi
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.k_i
+  0       4                       1                       4                
+  6   258   # mMC_voltage_Mode.synchronization02_1.initType_i
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.synchronization02_1.y_start_i
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.polar2Complex1.xmag
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.polar2Complex1.xr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.polar2Complex1.xi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.rI_to_dq5.xr
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.rI_to_dq5.xi
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.rI_to_dq5.xd
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.rI_to_dq5.xq
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.add.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.T
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.y_start
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.PI.der(x)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.Vgd_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCd_axisVoltageControl1.igq_ref
+ -1      10                       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.k
+ -1  3.3333333333333340E-02       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.T
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.aCd_axisVoltageControl1.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.x_start
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCd_axisVoltageControl1.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.add.u1
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.add.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.add.k1
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.add.k2
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.k
+  0       1                 2.2250738585072014E-308 1.7976931348623157E+308
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.T
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.initType
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.x_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.y_start
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.y
+ -1       0                       0                       0                
+  2   272   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.x
+  0       0                       0                       0                
+  3   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.PI.der(x)
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.Vgq_ref
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.aCq_axisVoltageControl1.igd_ref
+ -1      10                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.k
+ -1  3.3333333333333340E-02       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.T
+  0       3                       1                       4                
+  6   258   # mMC_voltage_Mode.aCq_axisVoltageControl1.initType
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.x_start
+ -1       0                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.y_start
+ -1      -1                       0                       0                
+  1   280   # mMC_voltage_Mode.aCq_axisVoltageControl1.gain.k
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.switch4.u2
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.switch5.u2
+ -1  1.7453292519943295E-02       0                       0                
+  1   280   # mMC_voltage_Mode.gain3.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain3.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.gain3.y
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.energy_Calculator.C_eq
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.energy_Calculator.gain.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.energy_Calculator.gain.u
+  0       0                       0                       0                
+  6   320   # mMC_voltage_Mode.Vdc_ref_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Pref_SI
+  0       0                       0                       0                
+  6   320   # mMC_voltage_Mode.Qref_SI
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Vac_ref_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.P_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Q_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.S0.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.S0.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.xq0.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.xq0.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Ra0.re
+ -1       0                       0                       0                
+  1  1304   # mMC_voltage_Mode.Ra0.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Vt0.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Vt0.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.I0_SI.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.I0_SI.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.ir0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.ii0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.v_m.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.v_m.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.delta0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.P_vsc_ac.re
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.P_vsc_ac.im
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.P_vsc_dc
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.P_vsc_dc_pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.R_dc
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Vdc0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.dis
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Idc0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Vmdc0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Pdc_0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.W_0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Idc0_pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.Vmdc0_pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.DC_0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmr0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmi0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmd0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmq0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmd0pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vmq0pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.id0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.iq0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.id0pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.iq0pu
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgr0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgi0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgd0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgq0_SI
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgd0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.vgq0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.ACd0
+  0       0                       0                       0                
+  6  1280   # mMC_voltage_Mode.ACq0
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.flag2.k
+  0       1                       0                       0                
+  6   257   # mMC_voltage_Mode.flag2.y
+  0       0                       0                       0                
+  6   257   # mMC_voltage_Mode.flag1.k
+  0       0                       0                       0                
+  6   257   # mMC_voltage_Mode.flag1.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Vdc_ref_mock.k
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Pref_mock.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Pref_mock.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Pref_mock.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Qref_mock.k
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.Vac_ref_mock.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Vac_ref_mock.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.Vac_ref_mock.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.theta_ref_mock.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.theta_ref_mock.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.theta_ref_mock.y
+ -1       1                       0                       0                
+  1   280   # mMC_voltage_Mode.f_ref_mock.k
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.f_ref_mock.u
+  0       0                       0                       0                
+  6   256   # mMC_voltage_Mode.f_ref_mock.y
+ -1  6.4000000000000000E+05       0                       0                
+  2   280   # capacitor.v
+  0       0                       0                       0                
+  3   256   # capacitor.der(v)
+  0       0                       0                       0                
+  6   388   # capacitor.p.i
+  0       0                       0                       0                
+  6   260   # capacitor.n.v
+ -1  1.9500000000000000E-04       0                 1.7976931348623157E+308
+  1   280   # capacitor.C
+ -1  1.0000000000000001E-01       0                       0                
+  1   280   # Qref.height
+  0       0                       0                       0                
+  6   320   # Qref.y
+ -1  2.0000000000000001E-01       0                       0                
+  1   280   # Qref.offset
+ -1       3                       0                       0                
+  1   280   # Qref.startTime
+ -1  1.0000000000000000E+09       0                       0                
+  1   280   # bus1.S_b
+  0       0                       0                       0                
+  6   257   # bus1.enableS_b
+ -1  3.2000000000000000E+05       0                       0                
+  1   280   # bus1.V_b
+  0       0                       0                       0                
+  6   257   # bus1.enableV_b
+  0       0                       0                       0                
+  6   256   # bus1.fn
+  0       0                       0                       0                
+  6   257   # bus1.enablefn
+ -1  1.0000000000000000E+06       0                       0                
+  1   280   # bus1.P_0
+  0       0                       0                       0                
+  6   257   # bus1.enableP_0
+ -1       0                       0                       0                
+  1   280   # bus1.Q_0
+  0       0                       0                       0                
+  6   257   # bus1.enableQ_0
+ -1       1                       0                       0                
+  1   280   # bus1.v_0
+  0       1                       0                       0                
+  6   257   # bus1.enablev_0
+ -1       0                       0                       0                
+  1   280   # bus1.angle_0
+  0       1                       0                       0                
+  6   257   # bus1.enableangle_0
+ -1       1                       0                       0                
+  1   281   # bus1.displayPF
+  0       1                       0                       0                
+  6   257   # bus1.enabledisplayPF
+  0       0                       0                       0                
+  6   388   # bus1.p.ir
+  0       0                       0                       0                
+  6   388   # bus1.p.ii
+  0       0                       0                       0                
+  6   256   # bus1.v
+  0       0                       0                       0                
+  6   256   # bus1.angle
+  0       0                       0                       0                
+  6   256   # bus1.angleDisplay
+  0       0                       0                       0                
+  6   260   # signalCurrent.p.v
+  0       0                       0                       0                
+  6   452   # signalCurrent.p.i
+ -1  1.5625000000000000E+02       0                       0                
+  1   280   # CurrentStep.height
+ -1  7.8125000000000000E+02       0                       0                
+  1   280   # CurrentStep.offset
+ -1       1                       0                       0                
+  1   280   # CurrentStep.startTime
+
+
+# Matrix with 6 columns defining the initial value calculation
+# (columns 5 and 6 are not utilized for the calculation but are
+#  reported by dymosim via dymosim -i for user convenience):
+#
+# column 1: Type of initial value
+#           = -2: special case: for continuing simulation (column 2 = value)
+#           = -1: fixed value (column 2 = fixed value)
+#           =  0: free value, i.e., no restriction (column 2 = initial value)
+#           >  0: desired value (column 1 = weight for optimization
+#                                column 2 = desired value)
+#                 use weight=1, since automatic scaling usually
+#                 leads to equally weighted terms
+# column 2: fixed, free or desired value according to column 1.
+# column 3: Minimum value (ignored, if Minimum >= Maximum).
+# column 4: Maximum value (ignored, if Minimum >= Maximum).
+#           Minimum and maximum restrict the search range in initial
+#           value calculation. They might also be used for scaling.
+# column 5: Category of variable.
+#           = 1: parameter.
+#           = 2: state.
+#           = 3: state derivative.
+#           = 4: output.
+#           = 5: input.
+#           = 6: auxiliary variable.
+# column 6: Data type of variable and flags according to dsBaseType
+#  <value>&3= 0: real.
+#  <value>&3= 1: boolean.
+#  <value>&3= 2: integer.
+#
+# Initial values are calculated according to the following procedure:
+#
+# Initial values are calculated according to the following procedure:
+#
+# - If parameters, states and inputs are FIXED, and other variables
+#   are FREE, the initialization is performed in the normal way.
+#
+# - If parameters and inputs are FIXED, and all other variables
+#   have special case for continue (-2 in 1st column), or FREE
+#   the initialization is ignored and variables are set to these values.
+#   This is intended to continue the simulation.
+#
+#   Which variables will be important for initialization and continue
+#   is indicated by value in column 6 & dsStartMasks.
+#
+char initialDescription(641,127)
+System base [V.A|MV.A]
+System frequency [Hz]
+System base power [V.A|MV.A]
+Enable S_b in parameter list [:#(type=Boolean)]
+Base voltage of the bus [V|kV]
+Enable V_b in parameter list [:#(type=Boolean)]
+System frequency [Hz]
+Enable fn in parameter list [:#(type=Boolean)]
+Initial active power [W|MW]
+Enable P_0 in parameter list [:#(type=Boolean)]
+Initial reactive power [var|Mvar]
+Enable Q_0 in parameter list [:#(type=Boolean)]
+Initial voltage magnitude [1|1]
+Enable v_0 in parameter list [:#(type=Boolean)]
+Initial voltage angle [rad|deg]
+Enable angle_0 in parameter list [:#(type=Boolean)]
+Display power flow: [:#(type=Boolean)]
+Enable displayPF in parameter list [:#(type=Boolean)]
+Active Power absorbed by the Infinite bus [W|MW]
+Reactive Power absorbed by the Infinite bus [var|Mvar]
+Real part of the voltage [1]
+Imaginary part of the voltage [1]
+Real part of the current [1]
+Imaginary part of the current [1]
+Height of step
+Connector of Real output signal
+Offset of output signal y
+Output y = offset for time < startTime [s|s]
+Potential at the pin [V]
+Current flowing into the pin [A]
+System base power (MVA) [V.A]
+
+
+
+
+[W|MW]
+[W|MW]
+[var|Mvar]
+[var|Mvar]
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+True-Pac(Vac) mode; False-Vdc mode [:#(type=Boolean)]
+True-Qac mode; False-Vac mode [:#(type=Boolean)]
+Connection resistance (pu)
+Connection inductance L (pu)
+MMC arm inductance (pu)
+MMC arm resistance (pu)
+Equivalent capacitance of the DC grid (F)
+MMC submodule capacitor (F)
+Number of submodules per arm
+System base power (MVA)
+Converter rated power (MVA)
+System frequency (Hz)
+Base voltage (kV)
+Base DC voltage (kV)
+Connection bus voltage magnitude (pu)
+Connection bus voltage angle [rad|deg]
+Pref initial (pu)
+Qref initial (pu)
+DC voltage reference (pu)
+Energy reference (pu)
+Line-to-Line AC voltage base power (kV)
+Converter rated power (MVA)
+Base DC voltage (kV)
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+
+[V]
+[V]
+
+
+
+
+
+
+Line-to-Line AC voltage base power (kV)
+Base DC voltage (kV)
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+
+
+[V]
+
+[V]
+[V]
+Connector of Real input signal 1
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Connector of Real input signal 1
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+State of block
+der(State of block)
+Total Energy
+AC Active Power
+Reference DC Current
+Connector of Real input signal 1
+Gain value multiplied with input signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real input signal 1
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Reference AC Active Power
+Connector of Real input signal 1
+AC Voltage of the d-axis
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+State of block
+der(State of block)
+Reference AC current of the d-axis
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Connector of Real output signal
+Integrator gain
+= true, if reset port enabled [:#(type=Boolean)]
+= true, if set port enabled and used as reinitialization value when reset [:#(type=Boolean)]
+Type of initialization (1: no init, 2: steady state, 3,4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Connector of Real output signal
+der(Connector of Real output signal)
+[:#(type=Boolean)]
+
+Reference AC Reactive Power
+AC Reactive Power
+Reference AC Current of the q-axis
+Integrator gain
+Type of initialization (1: no init, 2: steady state, 3,4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Gain value multiplied with input signal
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+State of block
+der(State of block)
+Gain of input signal 1
+Gain of input signal 2
+DC Moduilation Index
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+[Hz]
+
+
+
+
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+AC Current of the d-axis
+AC Current of the q-axis
+Modulation Index of the d-axis
+Reference AC Current of the d-axis
+Gain value multiplied with input signal
+Output signal connector
+Gain of input signal 1
+Gain of input signal 2
+Gain of input signal 3
+Connector of Real input signal 2
+Modulated d-axis Voltage
+Gain value multiplied with input signal
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+State of block
+der(State of block)
+Gain
+Time Constant (T>0 required) [s|s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+[Hz]
+
+
+
+
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+State of block
+der(State of block)
+Gain of input signal 1
+Gain of input signal 2
+Gain of input signal 3
+Connector of Real input signal 3
+Modulation Index of the q axis
+AC Voltage of the q axis
+Modulated AC q axis Voltage
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Initial value of output
+Connection resistance (pu)
+Connection inductance L (pu)
+MMC arm inductance (pu)
+MMC arm resistance (pu)
+MMC submodule capacitor (F)
+Number of submodules per arm
+System base power (MVA)
+Converter rated power (MVA)
+System frequency (Hz)
+Base voltage (kV)
+Base DC voltage (kV)
+Connection bus voltage magnitude (V)
+Connection bus voltage angle (radian) [rad|deg]
+DC voltage reference (pu)
+Energy reference (pu)
+=Pref initial (W)
+=-Qref initial (VAr)
+=reference PCC voltage (pu)
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Initial AC real current [A]
+Initial AC imaginary current [A]
+Real part of complex number
+Imaginary part of complex number
+Modulated connection bus voltage angle (radian) [rad|deg]
+Real part of complex number
+Imaginary part of complex number
+DC Power
+DC side equivalent resistance
+DC volatge
+Temporary variable
+Initial DC current [A]
+Potential at the pin [V]
+Resistance at temperature T_ref [Ohm]
+Reference temperature [K;degC]
+Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref)) [1/K]
+Voltage drop of the two pins (= p.v - n.v) [V]
+Potential at the pin [V]
+= true, if heatPort is enabled [:#(type=Boolean)]
+Fixed device temperature if useHeatPort = false [K;degC]
+Loss power leaving component via heatPort [W]
+Actual resistance = R*(1 + alpha*(T_heatPort - T_ref)) [Ohm]
+Voltage drop of the two pins (= p.v - n.v) [V]
+Current flowing from pin p to pin n [A]
+der(Current flowing from pin p to pin n) [A/s]
+Inductance [H]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Voltage drop of the two pins (= p.v - n.v) [V]
+der(Voltage drop of the two pins (= p.v - n.v)) [V/s]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Capacitance [F]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Voltage between pin p and n (= p.v - n.v) as input signal [V]
+Potential at the pin [V]
+Voltage between pin p and n (= p.v - n.v) as input signal [V]
+Voltage drop of the two pins (= p.v - n.v) [V]
+Potential at the pin [V]
+Current flowing from pin p to pin n [A]
+der(Current flowing from pin p to pin n) [A/s]
+Inductance [H]
+Resistance at temperature T_ref [Ohm]
+Reference temperature [K;degC]
+Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref)) [1/K]
+Voltage drop of the two pins (= p.v - n.v) [V]
+= true, if heatPort is enabled [:#(type=Boolean)]
+Fixed device temperature if useHeatPort = false [K;degC]
+Loss power leaving component via heatPort [W]
+Actual resistance = R*(1 + alpha*(T_heatPort - T_ref)) [Ohm]
+Voltage drop of the two pins (= p.v - n.v) [V]
+Potential at the pin [V]
+Current flowing from pin p to pin n [A]
+der(Current flowing from pin p to pin n) [A/s]
+Inductance [H]
+Resistance at temperature T_ref [Ohm]
+Reference temperature [K;degC]
+Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref)) [1/K]
+Voltage drop of the two pins (= p.v - n.v) [V]
+= true, if heatPort is enabled [:#(type=Boolean)]
+Fixed device temperature if useHeatPort = false [K;degC]
+Loss power leaving component via heatPort [W]
+Actual resistance = R*(1 + alpha*(T_heatPort - T_ref)) [Ohm]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Potential at the pin [V]
+Real part of the current [1]
+Imaginary part of the current [1]
+
+Connector of Real output signal [1]
+Connector of Real output signal
+Connector of Real output signal
+Connector of Real output signal
+Connector of Real output signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Potential at the pin [V]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Constant output value [Ohm]
+Real part of the voltage [1]
+Imaginary part of the voltage [1]
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number [1]
+Imaginary part of complex number [1]
+Voltage drop between the two pins (= p.v - n.v) [V]
+Real part of the voltage [1]
+Imaginary part of the voltage [1]
+Real part of complex number [1]
+Imaginary part of complex number [1]
+Potential at the pin [V]
+Current flowing into the pin [A]
+DC Power [W]
+[rad]
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Gain value multiplied with input signal
+Potential at the pin [V]
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Connector of Real input signal 1
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+State of block
+der(State of block)
+Reference DC Voltage
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Gain of input signal 1
+Gain of input signal 2
+Constant output value
+Connector of Boolean input signal [:#(type=Boolean)]
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Connector of Boolean input signal [:#(type=Boolean)]
+Connector of second Real input signal [rad]
+
+Connector of Real input signal 1
+Gain of input signal 1
+Gain of input signal 2
+
+
+System base frequency
+Connector of Real input signal 1
+Connector of Real input signal 2
+Gain of input signal 1
+Gain of input signal 2
+
+Gain value multiplied with input signal
+Output signal connector
+Gain
+Time Constant [s]
+Type of initialization (1: no init, 2: steady state, 3/4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Connector of Real output signal
+der(Connector of Real output signal)
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+State of block
+der(State of block)
+Integrator gain
+= true, if reset port enabled [:#(type=Boolean)]
+= true, if set port enabled and used as reinitialization value when reset [:#(type=Boolean)]
+Type of initialization (1: no init, 2: steady state, 3,4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Connector of Real output signal
+der(Connector of Real output signal)
+[:#(type=Boolean)]
+
+Gain
+Time Constant [s]
+Type of initialization (1: no init, 2: steady state, 3/4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial value of output
+Initial or guess value of state
+Integrator gain
+Type of initialization (1: no init, 2: steady state, 3,4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+
+Gain
+Time Constant [s]
+Type of initialization (1: no init, 2: steady state, 3/4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Integrator gain
+Type of initialization (1: no init, 2: steady state, 3,4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of output (= state)
+
+
+
+
+
+
+
+Connector of Real input signal 1
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+State of block
+der(State of block)
+Reference d-axis AC Voltage
+Reference q-axis AC Current
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real input signal 1
+Connector of Real output signal
+Gain of input signal 1
+Gain of input signal 2
+Gain
+Time Constant (T>0 required) [s]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Connector of Real output signal
+State of block
+der(State of block)
+Reference d-axis AC Voltage
+Reference q-axis AC Current
+Gain
+Time Constant (T>0 required) [s|ms]
+Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output) [:#(type=Modelica.Blocks.Types.Init)]
+Initial or guess value of state
+Initial value of output
+Gain value multiplied with input signal
+Connector of Boolean input signal [:#(type=Boolean)]
+Connector of Boolean input signal [:#(type=Boolean)]
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+
+Gain value multiplied with input signal
+Input signal connector
+Reference DC voltage (kV)
+Reference AC Active Power (MW)
+Reference AC Rective Power (MVAr)
+Reference AC Voltage (kV)
+Pref initial (W)
+Qref initial (VAr)
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Real part of complex number
+Imaginary part of complex number
+Init. val.
+Init. val.
+Real part of complex number
+Imaginary part of complex number
+[rad|deg]
+Real part of complex number
+Imaginary part of complex number
+
+
+Equivalent DC resistance (Ohm)
+DC voltage  (V)
+
+DC current (A)
+DC current (A)
+
+Initial output of PI controller
+DC current (A)
+DC current (A)
+Initial output of PI controller
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ d-axis current (pu)
+ q-axis current (pu)
+Initial output of d axis current PI controller
+Initial output of q axis current PI controller
+Constant output value [:#(type=Boolean)]
+Connector of Boolean output signal [:#(type=Boolean)]
+Constant output value [:#(type=Boolean)]
+Connector of Boolean output signal [:#(type=Boolean)]
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Gain value multiplied with input signal
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Gain value multiplied with input signal
+Input signal connector
+Output signal connector
+Voltage drop of the two pins (= p.v - n.v) [V]
+der(Voltage drop of the two pins (= p.v - n.v)) [V/s]
+Current flowing into the pin [A]
+Potential at the pin [V]
+Capacitance [F]
+Height of step
+Connector of Real output signal
+Offset of output signal y
+Output y = offset for time < startTime [s]
+System base power [V.A|MV.A]
+Enable S_b in parameter list [:#(type=Boolean)]
+Base voltage of the bus [V|kV]
+Enable V_b in parameter list [:#(type=Boolean)]
+System frequency [Hz]
+Enable fn in parameter list [:#(type=Boolean)]
+Initial active power [W|MW]
+Enable P_0 in parameter list [:#(type=Boolean)]
+Initial reactive power [var|Mvar]
+Enable Q_0 in parameter list [:#(type=Boolean)]
+Initial voltage magnitude [1]
+Enable v_0 in parameter list [:#(type=Boolean)]
+Initial voltage angle [rad|deg]
+Enable angle_0 in parameter list [:#(type=Boolean)]
+Display power flow: [:#(type=Boolean)]
+Enable displayPF in parameter list [:#(type=Boolean)]
+Real part of the current [1]
+Imaginary part of the current [1]
+Bus voltage magnitude [1]
+Bus voltage angle [rad|deg]
+Angle in degrees for display purposes [deg]
+Potential at the pin [V]
+Current flowing into the pin [A]
+Height of step [A]
+Offset of output signal y [A]
+Output y = offset for time < startTime [s]
+
