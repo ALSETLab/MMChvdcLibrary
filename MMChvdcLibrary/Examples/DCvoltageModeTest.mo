@@ -14,14 +14,14 @@ model DCvoltageModeTest
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=180,
-        origin={90,34})));
+        origin={82,34})));
   inner OpenIPSL.Electrical.SystemBase SysData(S_b=1000000000,
                                                          fn=50)
-    annotation (Placement(transformation(extent={{32,78},{98,98}})));
+    annotation (Placement(transformation(extent={{26,62},{92,82}})));
   Modelica.Blocks.Sources.Step Vdc_ref(
     height=0.5,
     offset=1,
-    startTime(displayUnit="s") = 1) "Reference DC voltage"
+    startTime(displayUnit="s") = 2) "Reference DC voltage"
     annotation (Placement(transformation(extent={{-40,-40},{-20,-20}})));
   Modelica.Electrical.Analog.Basic.Ground ground
     annotation (Placement(transformation(extent={{-60,-14},{-40,6}})));
@@ -56,7 +56,7 @@ model DCvoltageModeTest
   Modelica.Blocks.Sources.Step     Qref(
     height=0.1,
     offset=0.2,
-    startTime=1.5) "Reference reactive power"
+    startTime=3)   "Reference reactive power"
     annotation (Placement(transformation(extent={{-40,-80},{-20,-60}})));
   OpenIPSL.Electrical.Buses.Bus bus1(
     S_b=1000000000,
@@ -87,7 +87,7 @@ equation
     annotation (Line(points={{44,34},{60,34}},
                                              color={0,0,255}));
   connect(bus1.p, infiniteBus.p)
-    annotation (Line(points={{60,34},{80,34}},
+    annotation (Line(points={{60,34},{72,34}},
                                              color={0,0,255}));
   connect(signalCurrent.n, mMC_voltage_Mode.pin_p) annotation (Line(points={{-68,50},
           {-68,60},{-32,60},{-32,46.2222},{-18.1818,46.2222}},
