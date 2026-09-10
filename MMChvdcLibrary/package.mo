@@ -3,7 +3,6 @@ package MMChvdcLibrary "Modular Multilevel Coverter HVDC Library."
   annotation (uses(
       Modelica(version="4.1.0"),
       OpenIPSL(version="3.1.0"),
-      MMC_HVDC_BlackStart(version="2"),
       Complex(version="4.1.0")),
     Documentation(info="<html>
 <p>The MMChvdcLibrary or Modular Multilevel Coverter HVDC Library is a <a href=\"https://modelica.org/\">Modelica</a> library, developed and maintained by the <a href=\"https://alsetlab.github.io/\">ALSETLab</a> research group, collaborators and friends (contributions are welcome!). The library contains a set of component models and test MMC HVDC system networks adopting the phasor modeling approach.</p>
